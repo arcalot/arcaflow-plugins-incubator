@@ -1,0 +1,6 @@
+test_type: "stream"
+num_threads: 1
+protocol: "tcp"
+message_size: 64
+read_message_size: 64 
+
