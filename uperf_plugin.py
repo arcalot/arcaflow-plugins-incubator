@@ -37,15 +37,18 @@ class UPerfError:
     error: str
 
 
-def start_slave():
+def start_server():
+    # Note: Uperf calls it 'slave'
     return subprocess.Popen(['uperf', '-s']) 
 
-def start_master(protocol):
+def start_client(protocol):
     process_env = os.environ.copy()
     # Pass variables into profile.
     process_env["h"] = "127.0.0.1"
     process_env["proto"] = protocol
+    process_env["dur"] = "10s"
     # TODO: Generate various types of profiles instead of using a sample profile.
+    # Note: uperf calls this 'master'
     return subprocess.Popen(['uperf', '-vaR', '-i', '1', '-m', os.getcwd() + '/profiles/sample.xml'],
         stdout=subprocess.PIPE, env=process_env)
 
@@ -66,14 +69,14 @@ def run_uperf(params: UPerfParams) -> typing.Tuple[str, typing.Union[UPerfResult
     :return: the string identifying which output it is, as well the output structure
     """
     # Launch slave first
-    slave_process = start_slave()
+    server_process = start_server()
 
-    with start_master(params.protocol) as master_process:
+    with start_client(params.protocol) as master_process:
         outs, errs = master_process.communicate()
         print("OUTPUTS: ", outs, errs)
         # TODO: Process output to generate output.
 
-    slave_process.terminate() # Graceful termination request
+    server_process.terminate() # Graceful termination request
 
     return "success", UPerfResults()
     # TODO: Handle errors and return error if one is encountered.

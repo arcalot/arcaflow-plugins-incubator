@@ -5,7 +5,7 @@
             <flowop type="accept" options="remotehost=$h protocol=$proto
 	    wndsz=50k tcp_nodelay"/>
         </transaction>
-        <transaction duration="30s">
+        <transaction duration="$dur">
             <flowop type="write" options="size=90"/>
             <flowop type="read" options="size=90"/>
         </transaction>
