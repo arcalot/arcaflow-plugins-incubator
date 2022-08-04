@@ -8,6 +8,11 @@ from arcaflow_plugin_sdk import plugin
 import subprocess
 import os
 import re
+import enum
+
+class IProtocol(enum.Enum):
+    TCP = "tcp"
+    UDP = "udp"
 
 @dataclass
 class UPerfParams:
@@ -16,7 +21,7 @@ class UPerfParams:
     """
     test_type: typing.Optional[str] = None # Not used yet
     num_threads: typing.Optional[int] = 1 # Not used yet
-    protocol: typing.Optional[str] = "tcp"# TODO: Use Enum Here
+    protocol: IProtocol = IProtocol.TCP.value
     message_size: typing.Optional[int] = 64 # Not used yet.
     read_message_size: typing.Optional[int] = 64 # Not used yet.
 
@@ -47,11 +52,11 @@ def start_server():
     # Note: Uperf calls it 'slave'
     return subprocess.Popen(['uperf', '-s']) 
 
-def start_client(protocol):
+def start_client(protocol: IProtocol):
     process_env = os.environ.copy()
     # Pass variables into profile.
     process_env["h"] = "127.0.0.1"
-    process_env["proto"] = protocol
+    process_env["proto"] = protocol.value
     process_env["dur"] = "10s"
     # TODO: Generate various types of profiles instead of using a sample profile.
     # Note: uperf calls this 'master'
