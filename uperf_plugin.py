@@ -10,6 +10,20 @@ import os
 import re
 import enum
 
+@dataclass
+class UPerfServerParams():
+    # How long to run the server
+    run_duration: int = 60
+
+@dataclass
+class UPerfServerError():
+    error_code: int
+    error: str
+
+@dataclass
+class UPerfServerResponse():
+    pass
+
 class IProtocol(enum.Enum):
     TCP = "tcp"
     UDP = "udp"
@@ -46,11 +60,6 @@ class UPerfError:
     This is the output data structure in the error  case.
     """
     error: str
-
-
-def start_server():
-    # Note: Uperf calls it 'slave'
-    return subprocess.Popen(['uperf', '-s']) 
 
 def start_client(protocol: IProtocol):
     process_env = os.environ.copy()
@@ -100,21 +109,37 @@ def run_uperf(params: UPerfParams) -> typing.Tuple[str, typing.Union[UPerfResult
 
     :return: the string identifying which output it is, as well the output structure
     """
-    # Launch slave first
-    server_process = start_server()
-
     with start_client(params.protocol) as master_process:
         outs, errs = master_process.communicate()
 
-    server_process.terminate() # Graceful termination request
     if errs != None and len(errs) > 0:
         return "error", UPerfError(errs.decode("utf-8"))
 
     return process_output(outs)
 
+@plugin.step(
+    id="uperf_server",
+    name="UPerf Server",
+    description="Runs the passive UPerf server to allow benchmarks between the client and this server",
+    outputs={"success": UPerfServerResponse, "error": UPerfServerError},
+)
+def run_uperf_server(params: UPerfServerParams) -> typing.Tuple[str,
+        typing.Union[UPerfServerResponse, UPerfServerError]]:
+    # Start the passive server
+    # Note: Uperf calls it 'slave'
+    try:
+        result = subprocess.run(['uperf', '-s'], stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE, timeout=params.run_duration)
+        # It should not end itself, so getting here means there was an error.
+        return "error", UPerfServerError(result.returncode, result.stdout.decode("utf-8") +
+            result.stderr.decode("utf-8"))
+    except subprocess.TimeoutExpired:
+        # Worked as intended. It doesn't end itself, so it finished when it timed out.
+        return "success", UPerfServerResponse()
 
 if __name__ == "__main__":
     sys.exit(plugin.run(plugin.build_schema(
         # List your step functions here:
+        run_uperf_server,
         run_uperf,
     )))
