@@ -14,6 +14,19 @@ In order to contribute a plugin, please fork the repository and add your plugin 
 - You MUST have tests, they MUST run in a network-disconnected environment, and they MUST run from the Dockerfile.
 - Your code MUST use the official Arcaflow plugin SDKs.
 - All schema fields MUST have a name and a description.
+
+### License requirements
+
+- The code committed to this repository MUST be licensed under the Apache 2.0 license.
+- You MUST NOT copy code from other projects, even if they are Apache 2.0 licensed, as there may be requirements to keep copyright notices. Include other projects as dependencies instead.
+- You MAY include dependencies (code or runtime) under the following licenses:
+  - Apache License 2.0
+  - BSD (0-clause, 2-clause or 3-clause)
+  - EPL 2.0
+  - GPLv2 or later
+  - LGPLv2 or later
+  - MIT, MIT-0
+  - Unlicense
 - Your plugin MUST include a `LICENSE` file with the Apache 2.0 license and MAY include a `NOTICE` file. Any copyright notices MUST read "Arcalot contributors".
 - Your plugin code MUST NOT include copyright or license headers in each file.
 
