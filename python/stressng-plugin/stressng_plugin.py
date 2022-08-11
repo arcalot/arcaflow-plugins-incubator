@@ -137,7 +137,7 @@ class WorkloadParams:
     defined below
     """
     StressNGParams: StressNGParams
-    cleanup: typing.Optional[str] = "True"
+    cleanup: typing.Optional[bool] = "True"
 
 
 @dataclass
