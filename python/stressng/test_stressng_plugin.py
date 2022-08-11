@@ -13,31 +13,18 @@ class StressNGTest(unittest.TestCase):
     @staticmethod
     def test_serialization():
         plugin.test_object_serialization(
-            stressng_plugin.cpuStressorParams(
-                stressor="cpu",
-                cpu_count=2
-            )
+            stressng_plugin.CpuStressorParams(stressor="cpu", cpu_count=2)
         )
 
         plugin.test_object_serialization(
-            stressng_plugin.vmStressorParams(
-                stressor="vm",
-                vm=2,
-                vm_bytes="2G"
-            )
+            stressng_plugin.VmStressorParams(stressor="vm", vm=2, vm_bytes="2G")
         )
 
         plugin.test_object_serialization(
-            stressng_plugin.matrixStressorParams(
-                stressor="matrix",
-                matrix=2
-            )
+            stressng_plugin.MatrixStressorParams(stressor="matrix", matrix=2)
         )
         plugin.test_object_serialization(
-            stressng_plugin.mqStressorParams(
-                stressor="mq",
-                mq=2
-            )
+            stressng_plugin.MqStressorParams(stressor="mq", mq=2)
         )
 
     def test_functional_cpu(self):
@@ -45,22 +32,15 @@ class StressNGTest(unittest.TestCase):
         # this is clearly not perfect, as we're limited to the field names and can't do a direct
         # comparison of the returned values
 
-        cpu = stressng_plugin.cpuStressorParams(
-            stressor="cpu",
-            cpu_count=2,
-            cpu_method="all"
+        cpu = stressng_plugin.CpuStressorParams(
+            stressor="cpu", cpu_count=2, cpu_method="all"
         )
 
         stress = stressng_plugin.StressNGParams(
-            timeout="99m",
-            cleanup="False",
-            items=[cpu]
+            timeout="99m", cleanup="False", items=[cpu]
         )
 
-        input = stressng_plugin.WorkloadParams(
-            StressNGParams=stress,
-            cleanup="False"
-        )
+        input = stressng_plugin.WorkloadParams(StressNGParams=stress, cleanup="False")
 
         reference_jobfile = "./reference_jobfile"
 
@@ -69,7 +49,7 @@ class StressNGTest(unittest.TestCase):
         for item in stress.items:
             result = result + item.to_jobfile()
 
-        with open(reference_jobfile, 'r') as file:
+        with open(reference_jobfile, "r") as file:
             try:
                 reference = yaml.safe_load(file)
             except yaml.YAMLError as e:
@@ -80,5 +60,5 @@ class StressNGTest(unittest.TestCase):
     # TODO: Create a test for the actual output of stressng.
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

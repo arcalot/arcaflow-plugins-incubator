@@ -1,0 +1,3 @@
+arcaflow-plugin-sdk
+numpy
+scipy

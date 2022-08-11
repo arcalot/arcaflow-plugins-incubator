@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=bla-schema.json
+# yaml-language-server: $schema=stressng-schema.json
 StressNGParams:
   timeout: 1m
   cleanup: "true"
