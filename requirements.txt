@@ -1,1 +1,1 @@
-arcaflow_plugin_sdk
+arcaflow_plugin_sdk==0.4.2

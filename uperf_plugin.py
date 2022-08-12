@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.9
 
 import sys
 import typing
@@ -33,11 +33,9 @@ class UPerfParams:
     """
     This is the data structure for the input parameters of the step defined below.
     """
-    test_type: typing.Optional[str] = None # Not used yet
-    num_threads: typing.Optional[int] = 1 # Not used yet
+    server_addr: str = "127.0.0.1"
     protocol: IProtocol = IProtocol.TCP.value
-    message_size: typing.Optional[int] = 64 # Not used yet.
-    read_message_size: typing.Optional[int] = 64 # Not used yet.
+    run_duration: int = 50
 
 @dataclass
 class UPerfRawData:
@@ -61,16 +59,16 @@ class UPerfError:
     """
     error: str
 
-def start_client(protocol: IProtocol):
+def start_client(params: UPerfParams):
     process_env = os.environ.copy()
     # Pass variables into profile.
-    process_env["h"] = "127.0.0.1"
-    process_env["proto"] = protocol.value
+    process_env["h"] = params.server_addr
+    process_env["proto"] = params.protocol.value
     process_env["dur"] = "10s"
     # TODO: Generate various types of profiles instead of using a sample profile.
     # Note: uperf calls this 'master'
-    return subprocess.Popen(['uperf', '-vaR', '-i', '1', '-m', os.getcwd() + '/profiles/sample.xml'],
-        stdout=subprocess.PIPE, env=process_env)
+    return subprocess.Popen(['uperf', '-vaR', '-i', '1', '-m', os.getcwd() + '/profiles/sample.xml', ],
+        stdout=subprocess.PIPE, env=process_env, cwd=os.getcwd())
 
 # TODO: Make running server its own step. And make it run on a timer.
 
@@ -78,7 +76,7 @@ def process_output(output: bytes) -> typing.Tuple[str, typing.Union[UPerfResults
     decoded_output = output.decode("utf-8")
     profile_run_search = re.search(r"running profile:(.+) \.\.\.", decoded_output)
     if (profile_run_search == None):
-        return "error", UPerfError("Could not find profile name")
+        return "error", UPerfError("Failed to parse output: could not find profile name.\nOutput: " + decoded_output)
 
     profile_run = profile_run_search.group(1)
 
@@ -90,6 +88,9 @@ def process_output(output: bytes) -> typing.Tuple[str, typing.Union[UPerfResults
     for datapoint in timeseries_data_search:
         # For now, multiplying by 1000 to get unique times as integers.
         timeseries_data[int(float(datapoint[0])*1000)] = UPerfRawData(int(datapoint[1]), int(datapoint[2]))
+
+    if (len(timeseries_data_search) == 0):
+        return "error", UPerfError("No results found.\nOutput: " + decoded_output)
 
     return "success", UPerfResults(profile_name=profile_run, raw=timeseries_data)
 
@@ -109,11 +110,16 @@ def run_uperf(params: UPerfParams) -> typing.Tuple[str, typing.Union[UPerfResult
 
     :return: the string identifying which output it is, as well the output structure
     """
-    with start_client(params.protocol) as master_process:
+    with start_client(params) as master_process:
         outs, errs = master_process.communicate()
 
     if errs != None and len(errs) > 0:
         return "error", UPerfError(errs.decode("utf-8"))
+    if outs.find(b"aborted") != -1:
+        return "error", UPerfError("Errors found in run. Output:\n" + outs.decode("utf-8"))
+
+    # Debug output
+    print(outs.decode("utf-8"))
 
     return process_output(outs)
 

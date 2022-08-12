@@ -1,7 +1,7 @@
 # yaml-language-server $schema=input.schema.json
 
-test_type: "stream"
+test_type: "wrong"
 num_threads: 1
-protocol: "tcp"
+protocol: "wrong"
 message_size: 64
 read_message_size: 64 
