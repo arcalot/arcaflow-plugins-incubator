@@ -71,8 +71,6 @@ def start_client(params: UPerfParams):
     return subprocess.Popen(['uperf', '-vaR', '-i', '1', '-m', os.getcwd() + '/profiles/sample.xml', ],
         stdout=subprocess.PIPE, env=process_env, cwd=os.getcwd())
 
-# TODO: Make running server its own step. And make it run on a timer.
-
 def process_output(output: bytes) -> typing.Tuple[str, typing.Union[UPerfResults, UPerfError]]:
     decoded_output = output.decode("utf-8")
     profile_run_search = re.search(r"running profile:(.+) \.\.\.", decoded_output)
@@ -94,6 +92,28 @@ def process_output(output: bytes) -> typing.Tuple[str, typing.Union[UPerfResults
         return "error", UPerfError("No results found.\nOutput: " + decoded_output)
 
     return "success", UPerfResults(profile_name=profile_run, raw=timeseries_data)
+
+
+@plugin.step(
+    id="uperf_server",
+    name="UPerf Server",
+    description="Runs the passive UPerf server to allow benchmarks between the client and this server",
+    outputs={"success": UPerfServerResults, "error": UPerfServerError},
+)
+def run_uperf_server(params: UPerfServerParams) -> typing.Tuple[str,
+        typing.Union[UPerfServerResults, UPerfServerError]]:
+    # Start the passive server
+    # Note: Uperf calls it 'slave'
+    try:
+        result = subprocess.run(['uperf', '-s'], stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE, timeout=params.run_duration)
+        # It should not end itself, so getting here means there was an error.
+        return "error", UPerfServerError(result.returncode, result.stdout.decode("utf-8") +
+            result.stderr.decode("utf-8"))
+    except subprocess.TimeoutExpired:
+        # Worked as intended. It doesn't end itself, so it finished when it timed out.
+        return "success", UPerfServerResults()
+
 
 # The following is a decorator (starting with @). We add this in front of our function to define the metadata for our
 # step.
@@ -124,25 +144,6 @@ def run_uperf(params: UPerfParams) -> typing.Tuple[str, typing.Union[UPerfResult
 
     return process_output(outs)
 
-@plugin.step(
-    id="uperf_server",
-    name="UPerf Server",
-    description="Runs the passive UPerf server to allow benchmarks between the client and this server",
-    outputs={"success": UPerfServerResults, "error": UPerfServerError},
-)
-def run_uperf_server(params: UPerfServerParams) -> typing.Tuple[str,
-        typing.Union[UPerfServerResults, UPerfServerError]]:
-    # Start the passive server
-    # Note: Uperf calls it 'slave'
-    try:
-        result = subprocess.run(['uperf', '-s'], stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE, timeout=params.run_duration)
-        # It should not end itself, so getting here means there was an error.
-        return "error", UPerfServerError(result.returncode, result.stdout.decode("utf-8") +
-            result.stderr.decode("utf-8"))
-    except subprocess.TimeoutExpired:
-        # Worked as intended. It doesn't end itself, so it finished when it timed out.
-        return "success", UPerfServerResults()
 
 if __name__ == "__main__":
     sys.exit(plugin.run(plugin.build_schema(
