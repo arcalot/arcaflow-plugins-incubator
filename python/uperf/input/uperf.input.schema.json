@@ -1,25 +1,21 @@
 {
   "type": "object",
   "properties": {
-    "test_type": {
+    "server_addr": {
       "type": "string",
-      "title": "test_type"
-    },
-    "num_threads": {
-      "type": "integer",
-      "title": "num_threads"
+      "title": "server_addr"
     },
     "protocol": {
       "type": "string",
+      "enum": [
+        "tcp",
+        "udp"
+      ],
       "title": "protocol"
     },
-    "message_size": {
+    "run_duration_ms": {
       "type": "integer",
-      "title": "message_size"
-    },
-    "read_message_size": {
-      "type": "integer",
-      "title": "read_message_size"
+      "title": "run_duration_ms"
     }
   },
   "additionalProperties": false,

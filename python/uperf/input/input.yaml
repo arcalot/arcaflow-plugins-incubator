@@ -1,5 +1,5 @@
-# yaml-language-server $schema=input.schema.json
+# yaml-language-server $schema=uperf.input.schema.json
 
 server_addr: "server"
 protocol: "tcp"
-run_duration: 10
+run_duration_ms: 10000
