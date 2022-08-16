@@ -21,9 +21,10 @@ class UPerfServerError():
     error: str
 
 @dataclass
-class UPerfServerResponse():
+class UPerfServerResults():
     pass
 
+@dataclass
 class IProtocol(enum.Enum):
     TCP = "tcp"
     UDP = "udp"
@@ -34,8 +35,8 @@ class UPerfParams:
     This is the data structure for the input parameters of the step defined below.
     """
     server_addr: str = "127.0.0.1"
-    protocol: IProtocol = IProtocol.TCP.value
-    run_duration: int = 50
+    protocol: IProtocol = IProtocol.TCP
+    run_duration_ms: int = 5000
 
 @dataclass
 class UPerfRawData:
@@ -64,7 +65,7 @@ def start_client(params: UPerfParams):
     # Pass variables into profile.
     process_env["h"] = params.server_addr
     process_env["proto"] = params.protocol.value
-    process_env["dur"] = "10s"
+    process_env["dur"] = str(params.run_duration_ms) + "ms"
     # TODO: Generate various types of profiles instead of using a sample profile.
     # Note: uperf calls this 'master'
     return subprocess.Popen(['uperf', '-vaR', '-i', '1', '-m', os.getcwd() + '/profiles/sample.xml', ],
@@ -127,10 +128,10 @@ def run_uperf(params: UPerfParams) -> typing.Tuple[str, typing.Union[UPerfResult
     id="uperf_server",
     name="UPerf Server",
     description="Runs the passive UPerf server to allow benchmarks between the client and this server",
-    outputs={"success": UPerfServerResponse, "error": UPerfServerError},
+    outputs={"success": UPerfServerResults, "error": UPerfServerError},
 )
 def run_uperf_server(params: UPerfServerParams) -> typing.Tuple[str,
-        typing.Union[UPerfServerResponse, UPerfServerError]]:
+        typing.Union[UPerfServerResults, UPerfServerError]]:
     # Start the passive server
     # Note: Uperf calls it 'slave'
     try:
@@ -141,7 +142,7 @@ def run_uperf_server(params: UPerfServerParams) -> typing.Tuple[str,
             result.stderr.decode("utf-8"))
     except subprocess.TimeoutExpired:
         # Worked as intended. It doesn't end itself, so it finished when it timed out.
-        return "success", UPerfServerResponse()
+        return "success", UPerfServerResults()
 
 if __name__ == "__main__":
     sys.exit(plugin.run(plugin.build_schema(
