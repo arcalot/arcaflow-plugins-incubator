@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "properties": {
+    "test_type": {
+      "type": "string",
+      "title": "test_type"
+    },
+    "num_threads": {
+      "type": "integer",
+      "title": "num_threads"
+    },
+    "protocol": {
+      "type": "string",
+      "title": "protocol"
+    },
+    "message_size": {
+      "type": "integer",
+      "title": "message_size"
+    },
+    "read_message_size": {
+      "type": "integer",
+      "title": "read_message_size"
+    }
+  },
+  "additionalProperties": false,
+  "required": [],
+  "title": "UPerf Run input",
+  "description": "Runs uperf locally",
+  "$id": "uperf",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}
