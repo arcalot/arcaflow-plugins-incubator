@@ -11,12 +11,10 @@ ADD uperf_plugin.py /plugin
 ADD profiles /plugin/profiles
 ADD test_uperf_plugin.py /plugin
 ADD requirements.txt /plugin
-#ADD server_input.yaml /plugin
-#ADD input.yaml /plugin
 WORKDIR /plugin
 
 RUN pip3 install -r requirements.txt
-#RUN /usr/local/bin/python3 test_uperf_plugin.py
+RUN python3.9 test_uperf_plugin.py
 
 USER 1000
 
