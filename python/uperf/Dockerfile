@@ -1,9 +1,11 @@
-FROM quay.io/centos/centos:stream8
-
-RUN dnf module -y install python39 && dnf install -y python39 python39-pip git make gcc lksctp-tools-devel
+FROM quay.io/centos/centos:stream8 AS builder
+RUN dnf install -y git make gcc lksctp-tools-devel
 RUN git clone -b 1.0.7 https://github.com/uperf/uperf.git /uperf
 RUN cd /uperf && ./configure && make && make install
 
+FROM quay.io/centos/centos:stream8
+RUN dnf module -y install python39 && dnf install -y python39 python39-pip lksctp-tools-devel
+COPY --from=builder /usr/local/bin/uperf /usr/local/bin/uperf
 RUN mkdir /plugin /plugin/profiles
 ADD uperf_plugin.py /plugin
 ADD profiles /plugin/profiles
