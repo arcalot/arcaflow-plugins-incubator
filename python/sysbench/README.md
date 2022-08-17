@@ -8,16 +8,14 @@ You define your test parameters in a YAML file to be passed to the plugin comman
 
 ## To test:
 
-In order to run the [sysbench plugin](sysbench_plugin.py) run the following steps:
+In order to run the [arca-sysbench plugin](sysbench_plugin.py) run the following steps:
 
 ### Containerized
 1. Cone this repository
-2. Create the container with `docker build -t sysbench -f Dockerfile`
-3. Run `docker run sysbench -f configs/sysbench_cpu_example.yaml -s sysbenchcpu` to run sysbench for cpu
-4. Run `docker run sysbench -f configs/sysbench_memory_example.yaml -s sysbenchmemory` to run sysbench for memory
+2. Create the container with `docker build -t arca-sysbench -f Dockerfile`
+3. Run `cat configs/sysbench_cpu_example.yaml | docker run -i arca-sysbench -s sysbenchcpu -f -` to run sysbench for cpu
+4. Run `cat configs/sysbench_memory_example.yaml | docker run -i arca-sysbench -s sysbenchmemory -f -` to run sysbench for memory
 
-
-*Note that the config files under configs/ are added to the container image with the `docker build` command, so the container should be rebuilt after any changes to the files.*
 
 ### Native
 *Prerequisite: sysbench should already be installed on your system.* 
