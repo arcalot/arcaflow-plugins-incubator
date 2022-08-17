@@ -36,16 +36,16 @@ class SysbenchMemoryInputParams:
 
 @dataclass
 class LatencyAggregates:
-    avg: float
-    min: float
-    max: float
-    P95thpercentile: float
-    sum: float
+    avg: float = field(metadata={"name": "Average", "description":"Average Latency"})
+    min: float = field(metadata={"name": "Minimum", "description":"Minimum latency"})
+    max: float = field(metadata={"name": "Maximum", "description":"Maximum Latency"})
+    P95thpercentile: float = field(metadata={"name": "95th Percentile", "description":"95th percentile latency"})
+    sum: float = field(metadata={"name": "Sum", "description":"Sum of latencies"})
 
 @dataclass
 class ThreadFairnessAggregates:
-  avg: float
-  stddev: float
+  avg: float = field(metadata={"name": "Average", "description":"Average value across all threads"})
+  stddev: float = field(metadata={"name": "Standard Deviation", "description":"Standard deviation of all threads"})
 
 @dataclass
 class ThreadsFairness:

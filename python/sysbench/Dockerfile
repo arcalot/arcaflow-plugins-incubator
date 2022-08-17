@@ -15,11 +15,11 @@ RUN pip3 install -r requirements.txt
 RUN python3.9 test_sysbench_plugin.py
 
 ENTRYPOINT ["python3.9", "/app/sysbench_plugin.py"]
-CMD ["-f", "configs/sysbench_cpu_example.yaml", "-s", "sysbenchcpu"]
+CMD []
 
 LABEL org.opencontainers.image.title="Sysbench Arcalot Plugin"
 LABEL org.opencontainers.image.source="https://github.com/arcalot/arcaflow-plugins/python/sysbench/blob/main/sysbench_plugin.py"
-LABEL org.opencontainers.image.licenses="Apache-2.0"
+LABEL org.opencontainers.image.licenses="Apache-2.0+GPL-2.0-only"
 LABEL org.opencontainers.image.vendor="Arcalot project"
 LABEL org.opencontainers.image.authors="Arcalot contributors"
 LABEL io.github.arcalot.arcaflow.plugin.version="1" 
