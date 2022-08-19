@@ -26,8 +26,9 @@ In order to contribute a plugin, please fork the repository and add your plugin 
   - GPLv2 or later
   - LGPLv2 or later
   - MIT, MIT-0
+  - CC0
   - Unlicense
-- Your plugin MUST include a `LICENSE` file with the Apache 2.0 license and MAY include a `NOTICE` file. Any copyright notices MUST read "Arcalot contributors".
+- Any copyright notices MUST read "Arcalot contributors".
 - Your plugin code MUST NOT include copyright or license headers in each file.
 
 ### Container requirements
@@ -35,7 +36,7 @@ In order to contribute a plugin, please fork the repository and add your plugin 
 - Your plugin must contain a `Dockerfile` that is based on CentOS Stream 8 (`quay.io/centos/centos:stream8`).
 - Your `Dockerfile` must install all utilities that are required to run your plugin, and your image must work in a network-disconnected environment.
 - Your `Dockerfile` must use [multiple build stages](https://docs.docker.com/develop/develop-images/multistage-build/) if interim utilities such as `git` are needed to enable your plugin workload.
-- The `LICENSE` file must be included in the container image next to your runnable plugin.
+- The [LICENSE file from arcaflow-plugins](https://github.com/arcalot/arcaflow-plugins/blob/main/LICENSE) must be included in the container image next to your runnable plugin.
 - Your `ENTRYPOINT` MUST point to your plugin with the full path in the JSON-array-form (array), while the default `CMD` should be empty. See [the Dockerfile documentation](https://docs.docker.com/engine/reference/builder/#understand-how-cmd-and-entrypoint-interact) for details.
 - Unless your plugin runs in privileged mode (see labels below), your Dockerfile must switch to the user ID and group ID of `1000`.
 
