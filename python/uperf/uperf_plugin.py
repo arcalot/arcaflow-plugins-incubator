@@ -3,12 +3,56 @@
 import sys
 import typing
 from dataclasses import dataclass
+import xml_dataclasses
+from xml_dataclasses import xml_dataclass
+import xml.etree.ElementTree as ET
 from typing import List
 from arcaflow_plugin_sdk import plugin
 import subprocess
 import os
 import re
 import enum
+
+# Constants
+
+profile_path = os.getcwd() + '/profile.xml'
+
+# Profile data class components
+
+@xml_dataclass
+@dataclass
+class ProfileFlowOp():
+    type: str
+    options: typing.Optional[str] = None
+    __ns__: typing.Optional[str] = None
+
+
+@xml_dataclass
+@dataclass
+class ProfileTransaction():
+    flowop: List[ProfileFlowOp]
+    iterations: typing.Optional[str] = None
+    duration: typing.Optional[str] = None
+    rate: typing.Optional[str] = None
+    __ns__: typing.Optional[str] = None
+
+
+@xml_dataclass
+@dataclass
+class ProfileGroup():
+    nthreads: str
+    transaction: List[ProfileTransaction]
+    __ns__: typing.Optional[str] = None
+
+
+@xml_dataclass
+@dataclass
+class Profile():
+    name: str
+    group: List[ProfileGroup]
+    __ns__: typing.Optional[str] = None
+
+# Params and results
 
 @dataclass
 class UPerfServerParams():
@@ -34,7 +78,8 @@ class UPerfParams:
     """
     This is the data structure for the input parameters of the step defined below.
     """
-    server_addr: str = "127.0.0.1"
+    server_addr: str
+    profile: Profile
     protocol: IProtocol = IProtocol.TCP
     run_duration_ms: int = 5000
 
@@ -60,6 +105,20 @@ class UPerfError:
     """
     error: str
 
+def write_profile(params: UPerfParams):
+    tree = xml_dataclasses.dump(params.profile, "profile", None)
+    # This project requires indented/formatted XML.
+    ET.indent(tree)
+    ET.ElementTree(tree) \
+        .write(profile_path, encoding='us-ascii', xml_declaration=True)
+    # It requires a newline at end of file
+    with open(profile_path, "a") as profile_xml_file:
+        profile_xml_file.write("\n")
+
+def clean_profile():
+    if os.path.exists(profile_path):
+        os.remove(profile_path)
+
 def start_client(params: UPerfParams):
     process_env = os.environ.copy()
     # Pass variables into profile.
@@ -68,7 +127,7 @@ def start_client(params: UPerfParams):
     process_env["dur"] = str(params.run_duration_ms) + "ms"
     # TODO: Generate various types of profiles instead of using a sample profile.
     # Note: uperf calls this 'master'
-    return subprocess.Popen(['uperf', '-vaR', '-i', '1', '-m', os.getcwd() + '/profiles/sample.xml', ],
+    return subprocess.Popen(['uperf', '-vaR', '-i', '1', '-m', profile_path ],
         stdout=subprocess.PIPE, env=process_env, cwd=os.getcwd())
 
 def process_output(output: bytes) -> typing.Tuple[str, typing.Union[UPerfResults, UPerfError]]:
@@ -131,11 +190,15 @@ def run_uperf(params: UPerfParams) -> typing.Tuple[str, typing.Union[UPerfResult
 
     :return: the string identifying which output it is, as well the output structure
     """
+    clean_profile()
+    write_profile(params)
+
     with start_client(params) as master_process:
         outs, errs = master_process.communicate()
+    clean_profile()
 
     if errs != None and len(errs) > 0:
-        return "error", UPerfError(errs.decode("utf-8"))
+        return "error", UPerfError(outs + "\n" + errs.decode("utf-8"))
     if outs.find(b"aborted") != -1:
         return "error", UPerfError("Errors found in run. Output:\n" + outs.decode("utf-8"))
 

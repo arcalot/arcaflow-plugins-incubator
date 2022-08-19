@@ -5,6 +5,101 @@
       "type": "string",
       "title": "server_addr"
     },
+    "profile": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "name"
+        },
+        "group": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nthreads": {
+                "type": "string",
+                "title": "nthreads"
+              },
+              "transaction": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "flowop": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "title": "type"
+                          },
+                          "options": {
+                            "type": "string",
+                            "title": "options"
+                          },
+                          "__ns__": {
+                            "type": "string",
+                            "title": "__ns__"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      "title": "flowop"
+                    },
+                    "iterations": {
+                      "type": "string",
+                      "title": "iterations"
+                    },
+                    "duration": {
+                      "type": "string",
+                      "title": "duration"
+                    },
+                    "rate": {
+                      "type": "string",
+                      "title": "rate"
+                    },
+                    "__ns__": {
+                      "type": "string",
+                      "title": "__ns__"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "flowop"
+                  ]
+                },
+                "title": "transaction"
+              },
+              "__ns__": {
+                "type": "string",
+                "title": "__ns__"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "nthreads",
+              "transaction"
+            ]
+          },
+          "title": "group"
+        },
+        "__ns__": {
+          "type": "string",
+          "title": "__ns__"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "group"
+      ],
+      "title": "profile"
+    },
     "protocol": {
       "type": "string",
       "enum": [
@@ -19,7 +114,10 @@
     }
   },
   "additionalProperties": false,
-  "required": [],
+  "required": [
+    "server_addr",
+    "profile"
+  ],
   "title": "UPerf Run input",
   "description": "Runs uperf locally",
   "$id": "uperf",

@@ -1,1 +1,2 @@
 arcaflow_plugin_sdk==0.4.2
+xml-dataclasses==0.0.9

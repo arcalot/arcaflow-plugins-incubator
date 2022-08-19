@@ -2,15 +2,57 @@
 import socket
 import unittest
 import uperf_plugin
+import contextlib
 from arcaflow_plugin_sdk import plugin
 
+
+simple_profile = uperf_plugin.Profile(
+    name="test", group=[
+        uperf_plugin.ProfileGroup(
+            nthreads="1",
+            transaction= [
+                uperf_plugin.ProfileTransaction(
+                    iterations = "1",
+                    flowop = [
+                        uperf_plugin.ProfileFlowOp(
+                            type="accept",
+                            options="remotehost=$h protocol=$proto wndsz=50k tcp_nodelay"
+                        )
+                    ]
+                ),
+                uperf_plugin.ProfileTransaction(
+                    duration="$dur",
+                    flowop = [
+                        uperf_plugin.ProfileFlowOp(
+                            type="write",
+                            options="size=90"
+                        ),
+                        uperf_plugin.ProfileFlowOp(
+                            type="read",
+                            options="size=90"
+                        )
+                    ]
+                ),
+                uperf_plugin.ProfileTransaction(
+                    iterations = "1",
+                    flowop = [
+                        uperf_plugin.ProfileFlowOp(
+                            type="disconnect"
+                        )
+                    ]
+                )
+            ]
+        )
+    ]
+)
 
 class ExamplePluginTest(unittest.TestCase):
     @staticmethod
     def test_serialization():
         plugin.test_object_serialization(
-            uperf_plugin.UPerfParams("127.0.0.1",
-                uperf_plugin.IProtocol.TCP, 5
+            uperf_plugin.UPerfParams(server_addr="127.0.0.1",
+                profile=simple_profile,
+                protocol=uperf_plugin.IProtocol.TCP, run_duration_ms=50
             )
         )
 
@@ -58,15 +100,17 @@ class ExamplePluginTest(unittest.TestCase):
 
         # --------------------------
         # Test the client failing due to no server
-        client_input = uperf_plugin.UPerfParams("127.0.0.1",
-                uperf_plugin.IProtocol.TCP, 1
-            )
-        output_id, output_obj = uperf_plugin.run_uperf(client_input)
+        client_input = uperf_plugin.UPerfParams(server_addr="127.0.0.1", profile=simple_profile,
+            protocol=uperf_plugin.IProtocol.TCP, run_duration_ms=1
+        )
+
+        with contextlib.redirect_stdout(None): # Hide error messages
+            output_id, output_obj = uperf_plugin.run_uperf(client_input)
         self.assertEqual("error", output_id)
         self.assertEqual(1, output_obj.error.count("TCP: Cannot connect to 127.0.0.1:20000 Connection refused"))
 
         # --------------------------
-        # Test an actual work case scenario
+        # Test an actual working scenario
         # Start server for 1 second.
         # TODO. This requires multiple processes.
 

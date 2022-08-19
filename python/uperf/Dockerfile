@@ -6,17 +6,14 @@ RUN cd /uperf && ./configure && make && make install
 FROM quay.io/centos/centos:stream8
 RUN dnf module -y install python39 && dnf install -y python39 python39-pip lksctp-tools-devel
 COPY --from=builder /usr/local/bin/uperf /usr/local/bin/uperf
-RUN mkdir /plugin /plugin/profiles
+RUN mkdir /plugin
 ADD uperf_plugin.py /plugin
-ADD profiles /plugin/profiles
 ADD test_uperf_plugin.py /plugin
 ADD requirements.txt /plugin
 WORKDIR /plugin
 
 RUN pip3 install -r requirements.txt
 RUN python3.9 test_uperf_plugin.py
-
-USER 1000
 
 EXPOSE 20000
 
