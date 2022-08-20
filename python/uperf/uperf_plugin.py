@@ -1,112 +1,50 @@
 #!/usr/bin/env python3.9
 
+from uperf_schema import *
 import sys
 import typing
-from dataclasses import dataclass
-import xml_dataclasses
-from xml_dataclasses import xml_dataclass
 import xml.etree.ElementTree as ET
 from typing import List
 from arcaflow_plugin_sdk import plugin
 import subprocess
 import os
 import re
-import enum
 
 # Constants
 
 profile_path = os.getcwd() + '/profile.xml'
 
-# Profile data class components
+def write_profile(profile: Profile):
+    tree = ET.Element("profile")
+    tree.set("name", profile.name)
+    for group in profile.groups:
+        group_element = ET.Element("group")
+        if group.nthreads != None:
+            group_element.set("nthreads", str(group.nthreads))
+        elif group.nprocs != None:
+            group_element.set("nprocs", str(group.nprocs))
 
-@xml_dataclass
-@dataclass
-class ProfileFlowOp():
-    type: str
-    options: typing.Optional[str] = None
-    __ns__: typing.Optional[str] = None
+        for transaction in group.transactions:
+            transaction_element = ET.Element("transaction")
+            if transaction.iterations != None:
+                transaction_element.set("iterations", str(transaction.iterations))
+            elif transaction.duration != None:
+                transaction_element.set("duration", str(transaction.duration))
+            elif transaction.rate != None:
+                transaction_element.set("rate", str(transaction.rate))
 
+            for flowop in transaction.flowops:
+                flowop_element = ET.Element("flowop")
+                flowop_element.set("type", flowop.type)
+                options = flowop.get_options()
+                if len(options) > 0:
+                    flowop_element.set("options", " ".join(options))
+                transaction_element.append(flowop_element)
 
-@xml_dataclass
-@dataclass
-class ProfileTransaction():
-    flowop: List[ProfileFlowOp]
-    iterations: typing.Optional[str] = None
-    duration: typing.Optional[str] = None
-    rate: typing.Optional[str] = None
-    __ns__: typing.Optional[str] = None
+            group_element.append(transaction_element)
 
+        tree.append(group_element)
 
-@xml_dataclass
-@dataclass
-class ProfileGroup():
-    nthreads: str
-    transaction: List[ProfileTransaction]
-    __ns__: typing.Optional[str] = None
-
-
-@xml_dataclass
-@dataclass
-class Profile():
-    name: str
-    group: List[ProfileGroup]
-    __ns__: typing.Optional[str] = None
-
-# Params and results
-
-@dataclass
-class UPerfServerParams():
-    # How long to run the server
-    run_duration: int = 60
-
-@dataclass
-class UPerfServerError():
-    error_code: int
-    error: str
-
-@dataclass
-class UPerfServerResults():
-    pass
-
-@dataclass
-class IProtocol(enum.Enum):
-    TCP = "tcp"
-    UDP = "udp"
-
-@dataclass
-class UPerfParams:
-    """
-    This is the data structure for the input parameters of the step defined below.
-    """
-    server_addr: str
-    profile: Profile
-    protocol: IProtocol = IProtocol.TCP
-    run_duration_ms: int = 5000
-
-@dataclass
-class UPerfRawData:
-    nr_bytes: int
-    nr_ops: int
-
-@dataclass
-class UPerfResults:
-    """
-    This is the output data structure for the success case.
-    """
-    profile_name: str
-    # TODO: Switch to timestamp once supported.
-    raw: typing.Dict[int, UPerfRawData] # Timestamp to data
-
-
-@dataclass
-class UPerfError:
-    """
-    This is the output data structure in the error  case.
-    """
-    error: str
-
-def write_profile(params: UPerfParams):
-    tree = xml_dataclasses.dump(params.profile, "profile", None)
     # This project requires indented/formatted XML.
     ET.indent(tree)
     ET.ElementTree(tree) \
@@ -119,16 +57,12 @@ def clean_profile():
     if os.path.exists(profile_path):
         os.remove(profile_path)
 
-def start_client(params: UPerfParams):
-    process_env = os.environ.copy()
-    # Pass variables into profile.
-    process_env["h"] = params.server_addr
-    process_env["proto"] = params.protocol.value
-    process_env["dur"] = str(params.run_duration_ms) + "ms"
+def start_client(params: Profile):
+    # If you need to pass vars into proviles, use env and copy the current environment.
     # TODO: Generate various types of profiles instead of using a sample profile.
     # Note: uperf calls this 'master'
     return subprocess.Popen(['uperf', '-vaR', '-i', '1', '-m', profile_path ],
-        stdout=subprocess.PIPE, env=process_env, cwd=os.getcwd())
+        stdout=subprocess.PIPE, cwd=os.getcwd())
 
 def process_output(output: bytes) -> typing.Tuple[str, typing.Union[UPerfResults, UPerfError]]:
     decoded_output = output.decode("utf-8")
@@ -182,7 +116,7 @@ def run_uperf_server(params: UPerfServerParams) -> typing.Tuple[str,
     description="Runs uperf locally",
     outputs={"success": UPerfResults, "error": UPerfError},
 )
-def run_uperf(params: UPerfParams) -> typing.Tuple[str, typing.Union[UPerfResults, UPerfError]]:
+def run_uperf(params: Profile) -> typing.Tuple[str, typing.Union[UPerfResults, UPerfError]]:
     """
     Runs a uperf benchmark locally
 

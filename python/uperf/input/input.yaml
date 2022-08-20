@@ -1,23 +1,22 @@
 # yaml-language-server $schema=uperf.input.schema.json
 
-server_addr: "server"
-protocol: "tcp"
-run_duration_ms: 10000
-profile:
-  name: "netperf"
-  group:
-    - nthreads: "1"
-      transaction:
-        - iterations: "1"
-          flowop:
-            - type: "accept"
-              options: "remotehost=$h protocol=$proto wndsz=50k tcp_nodelay"
-        - duration: "$dur"
-          flowop:
-            - type: "write"
-              options: "size=90"
-            - type: "read"
-              options: "size=90"
-        - iterations: "1"
-          flowop:
-            - type: "disconnect"
+name: "netperf"
+groups:
+  - nthreads: 1
+    transactions:
+      - iterations: 1
+        flowops:
+          - type: "accept"
+            remotehost: "server"
+            protocol: "tcp"
+            wndsz: 50
+            tcp_nodelay: true
+      - duration: "10s"
+        flowops:
+          - type: "write"
+            size: 90
+          - type: "read"
+            size: 90
+      - iterations: 1
+        flowops:
+          - type: "disconnect"

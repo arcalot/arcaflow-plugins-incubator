@@ -1,2 +1,1 @@
-arcaflow_plugin_sdk==0.4.2
-xml-dataclasses==0.0.9
+git+https://github.com/jaredoconnell/arcaflow-plugin-sdk-python.git@5c2623bc64b1da753de06b626ecbc267b7b69b62

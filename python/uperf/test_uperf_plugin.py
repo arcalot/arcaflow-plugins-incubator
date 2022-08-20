@@ -2,41 +2,45 @@
 import socket
 import unittest
 import uperf_plugin
+import uperf_schema
 import contextlib
 from arcaflow_plugin_sdk import plugin
 
 
-simple_profile = uperf_plugin.Profile(
-    name="test", group=[
-        uperf_plugin.ProfileGroup(
-            nthreads="1",
-            transaction= [
-                uperf_plugin.ProfileTransaction(
-                    iterations = "1",
-                    flowop = [
-                        uperf_plugin.ProfileFlowOp(
+simple_profile = uperf_schema.Profile(
+    name="test", groups=[
+        uperf_schema.ProfileGroup(
+            nthreads=1,
+            transactions= [
+                uperf_schema.ProfileTransaction(
+                    iterations = 1,
+                    flowops = [
+                        uperf_schema.AcceptFlowOp(
                             type="accept",
-                            options="remotehost=$h protocol=$proto wndsz=50k tcp_nodelay"
+                            remotehost="127.0.0.1",
+                            protocol=uperf_schema.IProtocol.TCP,
+                            wndsz=5,
+                            tcp_nodelay=True
                         )
                     ]
                 ),
-                uperf_plugin.ProfileTransaction(
-                    duration="$dur",
-                    flowop = [
-                        uperf_plugin.ProfileFlowOp(
+                uperf_schema.ProfileTransaction(
+                    duration="50ms",
+                    flowops = [
+                        uperf_schema.WriteFlowOp(
                             type="write",
-                            options="size=90"
+                            size=90
                         ),
-                        uperf_plugin.ProfileFlowOp(
+                        uperf_schema.ReadFlowOp(
                             type="read",
-                            options="size=90"
+                            size=90
                         )
                     ]
                 ),
-                uperf_plugin.ProfileTransaction(
-                    iterations = "1",
-                    flowop = [
-                        uperf_plugin.ProfileFlowOp(
+                uperf_schema.ProfileTransaction(
+                    iterations = 1,
+                    flowops = [
+                        uperf_schema.DisconnectFlowOp(
                             type="disconnect"
                         )
                     ]
@@ -46,15 +50,27 @@ simple_profile = uperf_plugin.Profile(
     ]
 )
 
+sample_profile_expected = '''<?xml version='1.0' encoding='us-ascii'?>
+<profile name="test">
+  <group nthreads="1">
+    <transaction iterations="1">
+      <flowop type="accept" options="remotehost=127.0.0.1 protocol=tcp tcp_nodelay wndsz=5k" />
+    </transaction>
+    <transaction duration="50ms">
+      <flowop type="write" options="size=90k" />
+      <flowop type="read" options="size=90k" />
+    </transaction>
+    <transaction iterations="1">
+      <flowop type="disconnect" />
+    </transaction>
+  </group>
+</profile>
+'''
+
 class ExamplePluginTest(unittest.TestCase):
     @staticmethod
     def test_serialization():
-        plugin.test_object_serialization(
-            uperf_plugin.UPerfParams(server_addr="127.0.0.1",
-                profile=simple_profile,
-                protocol=uperf_plugin.IProtocol.TCP, run_duration_ms=50
-            )
-        )
+        plugin.test_object_serialization(simple_profile)
 
         plugin.test_object_serialization(
             uperf_plugin.UPerfServerParams(5)
@@ -75,6 +91,14 @@ class ExamplePluginTest(unittest.TestCase):
         plugin.test_object_serialization(
             uperf_plugin.UPerfServerError(1, "Not a real error")
         )
+    
+    def test_profile_gen(self):
+        uperf_plugin.clean_profile()
+        uperf_plugin.write_profile(simple_profile)
+        with open(uperf_plugin.profile_path, 'r', encoding='us-ascii') as file:
+            generated_file = file.read()
+        uperf_plugin.clean_profile()
+        self.assertEqual(sample_profile_expected, generated_file)
 
     def test_functional(self):
         # Test the server succesfully exiting
@@ -100,12 +124,9 @@ class ExamplePluginTest(unittest.TestCase):
 
         # --------------------------
         # Test the client failing due to no server
-        client_input = uperf_plugin.UPerfParams(server_addr="127.0.0.1", profile=simple_profile,
-            protocol=uperf_plugin.IProtocol.TCP, run_duration_ms=1
-        )
 
         with contextlib.redirect_stdout(None): # Hide error messages
-            output_id, output_obj = uperf_plugin.run_uperf(client_input)
+            output_id, output_obj = uperf_plugin.run_uperf(simple_profile)
         self.assertEqual("error", output_id)
         self.assertEqual(1, output_obj.error.count("TCP: Cannot connect to 127.0.0.1:20000 Connection refused"))
 

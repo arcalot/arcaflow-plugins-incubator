@@ -1,122 +1,838 @@
 {
   "type": "object",
   "properties": {
-    "server_addr": {
+    "name": {
       "type": "string",
-      "title": "server_addr"
+      "title": "name"
     },
-    "profile": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "title": "name"
-        },
-        "group": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "nthreads": {
-                "type": "string",
-                "title": "nthreads"
-              },
-              "transaction": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "flowop": {
-                      "type": "array",
-                      "items": {
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "transactions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "flowops": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
                         "type": "object",
                         "properties": {
                           "type": {
                             "type": "string",
-                            "title": "type"
+                            "title": "type",
+                            "const": "connect"
                           },
-                          "options": {
-                            "type": "string",
-                            "title": "options"
+                          "count": {
+                            "type": "integer",
+                            "title": "count"
                           },
-                          "__ns__": {
+                          "rate": {
+                            "type": "integer",
+                            "title": "rate"
+                          },
+                          "remotehost": {
                             "type": "string",
-                            "title": "__ns__"
+                            "title": "remotehost"
+                          },
+                          "protocol": {
+                            "type": "string",
+                            "enum": [
+                              "tcp",
+                              "udp",
+                              "ssl",
+                              "sctp",
+                              "vsock"
+                            ],
+                            "title": "protocol"
+                          },
+                          "tcp_nodelay": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "yes",
+                                  "true",
+                                  "on",
+                                  "enable",
+                                  "enabled",
+                                  "1",
+                                  "no",
+                                  "false",
+                                  "off",
+                                  "disable",
+                                  "disabled",
+                                  "0"
+                                ]
+                              },
+                              {
+                                "type": "integer",
+                                "maximum": 1,
+                                "minumum": 0
+                              }
+                            ],
+                            "title": "tcp_nodelay"
+                          },
+                          "wndsz": {
+                            "type": "integer",
+                            "title": "wndsz"
+                          },
+                          "engine": {
+                            "type": "string",
+                            "title": "engine"
                           }
                         },
                         "additionalProperties": false,
-                        "required": [
-                          "type"
-                        ]
+                        "required": [],
+                        "title": "connect"
                       },
-                      "title": "flowop"
-                    },
-                    "iterations": {
-                      "type": "string",
-                      "title": "iterations"
-                    },
-                    "duration": {
-                      "type": "string",
-                      "title": "duration"
-                    },
-                    "rate": {
-                      "type": "string",
-                      "title": "rate"
-                    },
-                    "__ns__": {
-                      "type": "string",
-                      "title": "__ns__"
-                    }
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "title": "type",
+                            "const": "accept"
+                          },
+                          "count": {
+                            "type": "integer",
+                            "title": "count"
+                          },
+                          "rate": {
+                            "type": "integer",
+                            "title": "rate"
+                          },
+                          "remotehost": {
+                            "type": "string",
+                            "title": "remotehost"
+                          },
+                          "protocol": {
+                            "type": "string",
+                            "enum": [
+                              "tcp",
+                              "udp",
+                              "ssl",
+                              "sctp",
+                              "vsock"
+                            ],
+                            "title": "protocol"
+                          },
+                          "tcp_nodelay": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "yes",
+                                  "true",
+                                  "on",
+                                  "enable",
+                                  "enabled",
+                                  "1",
+                                  "no",
+                                  "false",
+                                  "off",
+                                  "disable",
+                                  "disabled",
+                                  "0"
+                                ]
+                              },
+                              {
+                                "type": "integer",
+                                "maximum": 1,
+                                "minumum": 0
+                              }
+                            ],
+                            "title": "tcp_nodelay"
+                          },
+                          "wndsz": {
+                            "type": "integer",
+                            "title": "wndsz"
+                          },
+                          "engine": {
+                            "type": "string",
+                            "title": "engine"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": [],
+                        "title": "accept"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "title": "type",
+                            "const": "disconnect"
+                          },
+                          "count": {
+                            "type": "integer",
+                            "title": "count"
+                          },
+                          "rate": {
+                            "type": "integer",
+                            "title": "rate"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": [],
+                        "title": "disconnect"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "title": "type",
+                            "const": "read"
+                          },
+                          "count": {
+                            "type": "integer",
+                            "title": "count"
+                          },
+                          "rate": {
+                            "type": "integer",
+                            "title": "rate"
+                          },
+                          "size": {
+                            "type": "integer",
+                            "title": "size"
+                          },
+                          "rsize": {
+                            "type": "integer",
+                            "title": "rsize"
+                          },
+                          "canfail": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "yes",
+                                  "true",
+                                  "on",
+                                  "enable",
+                                  "enabled",
+                                  "1",
+                                  "no",
+                                  "false",
+                                  "off",
+                                  "disable",
+                                  "disabled",
+                                  "0"
+                                ]
+                              },
+                              {
+                                "type": "integer",
+                                "maximum": 1,
+                                "minumum": 0
+                              }
+                            ],
+                            "title": "canfail"
+                          },
+                          "non_blocking": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "yes",
+                                  "true",
+                                  "on",
+                                  "enable",
+                                  "enabled",
+                                  "1",
+                                  "no",
+                                  "false",
+                                  "off",
+                                  "disable",
+                                  "disabled",
+                                  "0"
+                                ]
+                              },
+                              {
+                                "type": "integer",
+                                "maximum": 1,
+                                "minumum": 0
+                              }
+                            ],
+                            "title": "non_blocking"
+                          },
+                          "poll_timeout": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "yes",
+                                  "true",
+                                  "on",
+                                  "enable",
+                                  "enabled",
+                                  "1",
+                                  "no",
+                                  "false",
+                                  "off",
+                                  "disable",
+                                  "disabled",
+                                  "0"
+                                ]
+                              },
+                              {
+                                "type": "integer",
+                                "maximum": 1,
+                                "minumum": 0
+                              }
+                            ],
+                            "title": "poll_timeout"
+                          },
+                          "conn": {
+                            "type": "integer",
+                            "title": "conn"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": [],
+                        "title": "read"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "title": "type",
+                            "const": "write"
+                          },
+                          "count": {
+                            "type": "integer",
+                            "title": "count"
+                          },
+                          "rate": {
+                            "type": "integer",
+                            "title": "rate"
+                          },
+                          "size": {
+                            "type": "integer",
+                            "title": "size"
+                          },
+                          "rsize": {
+                            "type": "integer",
+                            "title": "rsize"
+                          },
+                          "canfail": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "yes",
+                                  "true",
+                                  "on",
+                                  "enable",
+                                  "enabled",
+                                  "1",
+                                  "no",
+                                  "false",
+                                  "off",
+                                  "disable",
+                                  "disabled",
+                                  "0"
+                                ]
+                              },
+                              {
+                                "type": "integer",
+                                "maximum": 1,
+                                "minumum": 0
+                              }
+                            ],
+                            "title": "canfail"
+                          },
+                          "non_blocking": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "yes",
+                                  "true",
+                                  "on",
+                                  "enable",
+                                  "enabled",
+                                  "1",
+                                  "no",
+                                  "false",
+                                  "off",
+                                  "disable",
+                                  "disabled",
+                                  "0"
+                                ]
+                              },
+                              {
+                                "type": "integer",
+                                "maximum": 1,
+                                "minumum": 0
+                              }
+                            ],
+                            "title": "non_blocking"
+                          },
+                          "poll_timeout": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "yes",
+                                  "true",
+                                  "on",
+                                  "enable",
+                                  "enabled",
+                                  "1",
+                                  "no",
+                                  "false",
+                                  "off",
+                                  "disable",
+                                  "disabled",
+                                  "0"
+                                ]
+                              },
+                              {
+                                "type": "integer",
+                                "maximum": 1,
+                                "minumum": 0
+                              }
+                            ],
+                            "title": "poll_timeout"
+                          },
+                          "conn": {
+                            "type": "integer",
+                            "title": "conn"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": [],
+                        "title": "write"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "title": "type",
+                            "const": "recv"
+                          },
+                          "count": {
+                            "type": "integer",
+                            "title": "count"
+                          },
+                          "rate": {
+                            "type": "integer",
+                            "title": "rate"
+                          },
+                          "size": {
+                            "type": "integer",
+                            "title": "size"
+                          },
+                          "rsize": {
+                            "type": "integer",
+                            "title": "rsize"
+                          },
+                          "canfail": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "yes",
+                                  "true",
+                                  "on",
+                                  "enable",
+                                  "enabled",
+                                  "1",
+                                  "no",
+                                  "false",
+                                  "off",
+                                  "disable",
+                                  "disabled",
+                                  "0"
+                                ]
+                              },
+                              {
+                                "type": "integer",
+                                "maximum": 1,
+                                "minumum": 0
+                              }
+                            ],
+                            "title": "canfail"
+                          },
+                          "non_blocking": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "yes",
+                                  "true",
+                                  "on",
+                                  "enable",
+                                  "enabled",
+                                  "1",
+                                  "no",
+                                  "false",
+                                  "off",
+                                  "disable",
+                                  "disabled",
+                                  "0"
+                                ]
+                              },
+                              {
+                                "type": "integer",
+                                "maximum": 1,
+                                "minumum": 0
+                              }
+                            ],
+                            "title": "non_blocking"
+                          },
+                          "poll_timeout": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "yes",
+                                  "true",
+                                  "on",
+                                  "enable",
+                                  "enabled",
+                                  "1",
+                                  "no",
+                                  "false",
+                                  "off",
+                                  "disable",
+                                  "disabled",
+                                  "0"
+                                ]
+                              },
+                              {
+                                "type": "integer",
+                                "maximum": 1,
+                                "minumum": 0
+                              }
+                            ],
+                            "title": "poll_timeout"
+                          },
+                          "conn": {
+                            "type": "integer",
+                            "title": "conn"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": [],
+                        "title": "recv"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "title": "type",
+                            "const": "sendto"
+                          },
+                          "count": {
+                            "type": "integer",
+                            "title": "count"
+                          },
+                          "rate": {
+                            "type": "integer",
+                            "title": "rate"
+                          },
+                          "size": {
+                            "type": "integer",
+                            "title": "size"
+                          },
+                          "rsize": {
+                            "type": "integer",
+                            "title": "rsize"
+                          },
+                          "canfail": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "yes",
+                                  "true",
+                                  "on",
+                                  "enable",
+                                  "enabled",
+                                  "1",
+                                  "no",
+                                  "false",
+                                  "off",
+                                  "disable",
+                                  "disabled",
+                                  "0"
+                                ]
+                              },
+                              {
+                                "type": "integer",
+                                "maximum": 1,
+                                "minumum": 0
+                              }
+                            ],
+                            "title": "canfail"
+                          },
+                          "non_blocking": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "yes",
+                                  "true",
+                                  "on",
+                                  "enable",
+                                  "enabled",
+                                  "1",
+                                  "no",
+                                  "false",
+                                  "off",
+                                  "disable",
+                                  "disabled",
+                                  "0"
+                                ]
+                              },
+                              {
+                                "type": "integer",
+                                "maximum": 1,
+                                "minumum": 0
+                              }
+                            ],
+                            "title": "non_blocking"
+                          },
+                          "poll_timeout": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "yes",
+                                  "true",
+                                  "on",
+                                  "enable",
+                                  "enabled",
+                                  "1",
+                                  "no",
+                                  "false",
+                                  "off",
+                                  "disable",
+                                  "disabled",
+                                  "0"
+                                ]
+                              },
+                              {
+                                "type": "integer",
+                                "maximum": 1,
+                                "minumum": 0
+                              }
+                            ],
+                            "title": "poll_timeout"
+                          },
+                          "conn": {
+                            "type": "integer",
+                            "title": "conn"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": [],
+                        "title": "sendto"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "title": "type",
+                            "const": "sendfile"
+                          },
+                          "count": {
+                            "type": "integer",
+                            "title": "count"
+                          },
+                          "rate": {
+                            "type": "integer",
+                            "title": "rate"
+                          },
+                          "dir": {
+                            "type": "string",
+                            "title": "dir"
+                          },
+                          "nfiles": {
+                            "type": "integer",
+                            "title": "nfiles"
+                          },
+                          "size": {
+                            "type": "integer",
+                            "title": "size"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": [],
+                        "title": "sendfile"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "title": "type",
+                            "const": "sendfilev"
+                          },
+                          "count": {
+                            "type": "integer",
+                            "title": "count"
+                          },
+                          "rate": {
+                            "type": "integer",
+                            "title": "rate"
+                          },
+                          "dir": {
+                            "type": "string",
+                            "title": "dir"
+                          },
+                          "nfiles": {
+                            "type": "integer",
+                            "title": "nfiles"
+                          },
+                          "size": {
+                            "type": "integer",
+                            "title": "size"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": [],
+                        "title": "sendfilev"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "title": "type",
+                            "const": "NOP"
+                          },
+                          "count": {
+                            "type": "integer",
+                            "title": "count"
+                          },
+                          "rate": {
+                            "type": "integer",
+                            "title": "rate"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": [],
+                        "title": "NOP"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "title": "type",
+                            "const": "think"
+                          },
+                          "count": {
+                            "type": "integer",
+                            "title": "count"
+                          },
+                          "rate": {
+                            "type": "integer",
+                            "title": "rate"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": [],
+                        "title": "think"
+                      }
+                    ]
                   },
-                  "additionalProperties": false,
-                  "required": [
-                    "flowop"
-                  ]
+                  "title": "flowops"
                 },
-                "title": "transaction"
+                "iterations": {
+                  "type": "integer",
+                  "title": "iterations"
+                },
+                "duration": {
+                  "type": "string",
+                  "title": "duration"
+                },
+                "rate": {
+                  "type": "integer",
+                  "title": "rate"
+                }
               },
-              "__ns__": {
-                "type": "string",
-                "title": "__ns__"
-              }
+              "additionalProperties": false,
+              "required": [
+                "flowops"
+              ]
             },
-            "additionalProperties": false,
-            "required": [
-              "nthreads",
-              "transaction"
-            ]
+            "title": "transactions"
           },
-          "title": "group"
+          "nthreads": {
+            "type": "integer",
+            "title": "nthreads"
+          },
+          "nprocs": {
+            "type": "integer",
+            "title": "nprocs"
+          }
         },
-        "__ns__": {
-          "type": "string",
-          "title": "__ns__"
-        }
+        "additionalProperties": false,
+        "required": [
+          "transactions"
+        ]
       },
-      "additionalProperties": false,
-      "required": [
-        "name",
-        "group"
-      ],
-      "title": "profile"
-    },
-    "protocol": {
-      "type": "string",
-      "enum": [
-        "tcp",
-        "udp"
-      ],
-      "title": "protocol"
-    },
-    "run_duration_ms": {
-      "type": "integer",
-      "title": "run_duration_ms"
+      "title": "groups"
     }
   },
   "additionalProperties": false,
   "required": [
-    "server_addr",
-    "profile"
+    "name",
+    "groups"
   ],
   "title": "UPerf Run input",
   "description": "Runs uperf locally",
