@@ -107,7 +107,8 @@ class SysbenchMemoryOutputParams:
                                             "name": "Total operations per second", "description": "Total number of operations performed by the memory workload per second"})
     Totaloperations: float = field(metadata={
                                    "name": "Total operations", "description": "Total number of operations performed by the memory workload"})
-    Numberofthreads: float = 1
+    Numberofthreads: float = field(metadata={
+        "name": "Number of threads", "description": "Number of threads used by the workload"})
 
 
 @dataclass
@@ -122,7 +123,8 @@ class SysbenchCpuOutputParams:
                                        "name": "Total number of events", "description": "Total number of events performed by the workload"})
     Primenumberslimit: float = field(metadata={
                                      "name": "Prime numbers limit", "description": "Number of prime numbers to use for CPU workload"})
-    Numberofthreads: float = 1
+    Numberofthreads: float = field(metadata={
+        "name": "Number of threads", "description": "Number of threads used by the workload"})
 
 
 @dataclass
@@ -158,8 +160,10 @@ class WorkloadResultsCpu:
     """
     This is the output results data structure for the Sysbench CPU success case.
     """
-    sysbench_output_params: SysbenchCpuOutputParams
-    sysbench_results: SysbenchCpuResultParams
+    sysbench_output_params: SysbenchCpuOutputParams = field(metadata={
+        "name": "Sysbench Cpu Output Parameters", "description": "Ouptut parameters for a successful sysbench cpu workload execution"})
+    sysbench_results: SysbenchCpuResultParams = field(metadata={
+        "name": "Sysbench Cpu Result Parameters", "description": "Result parameters for a successful sysbench cpu workload execution"})
 
 
 @dataclass
@@ -167,17 +171,21 @@ class WorkloadResultsMemory:
     """
     This is the output results data structure for the Sysbench memory success case.
     """
-    sysbench_output_params: SysbenchMemoryOutputParams
-    sysbench_results: SysbenchMemoryResultParams
+    sysbench_output_params: SysbenchMemoryOutputParams = field(metadata={
+        "name": "Sysbench Memory Output Parameters", "description": "Ouptut parameters for a successful sysbench memory workload execution"})
+    sysbench_results: SysbenchMemoryResultParams = field(metadata={
+        "name": "Sysbench Memory Result Parameters", "description": "Result parameters for a successful sysbench Memory workload execution"})
 
 
 @dataclass
 class WorkloadError:
     """
-    This is the output data structure in the error  case.
+    This is the output data structure in the error case.
     """
-    exit_code: int
-    error: str
+    exit_code: int = field(metadata={
+        "name": "Exit Code", "description": "Exit code returned by the program in case of a failure"})
+    error: str = field(metadata={
+        "name": "Failure Error", "description": "Reason for failure"})
 
 
 sysbench_cpu_input_schema = plugin.build_object_schema(SysbenchCpuInputParams)
