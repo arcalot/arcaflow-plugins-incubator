@@ -4,7 +4,7 @@ RUN git clone -b 1.0.7 https://github.com/uperf/uperf.git /uperf
 RUN cd /uperf && ./configure && make && make install
 
 FROM quay.io/centos/centos:stream8
-RUN dnf module -y install python39 && dnf install -y python39 python39-pip lksctp-tools-devel git # REMOVE GIT once requirements.txt no longer needs it
+RUN dnf module -y install python39 && dnf install -y python39 python39-pip lksctp-tools-devel
 COPY --from=builder /usr/local/bin/uperf /usr/local/bin/uperf
 RUN mkdir /plugin
 ADD uperf_plugin.py /plugin
