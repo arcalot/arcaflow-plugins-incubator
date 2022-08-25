@@ -1,4 +1,4 @@
-# yaml-language-server $schema=uperf.input.schema.json
+# yaml-language-server:$schema=uperf.input.schema.json
 
 name: "netperf"
 groups:

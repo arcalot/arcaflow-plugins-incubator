@@ -84,7 +84,7 @@ def process_output(output: bytes) -> typing.Tuple[str, typing.Union[UPerfResults
     if (len(timeseries_data_search) == 0):
         return "error", UPerfError("No results found.\nOutput: " + decoded_output)
 
-    return "success", UPerfResults(profile_name=profile_run, raw=timeseries_data)
+    return "success", UPerfResults(profile_name=profile_run, throughput=timeseries_data)
 
 
 @plugin.step(

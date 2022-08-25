@@ -3,7 +3,8 @@
   "properties": {
     "name": {
       "type": "string",
-      "title": "name"
+      "title": "name",
+      "description": "The name you assign to the profile. Does not change the profile itself."
     },
     "groups": {
       "type": "array",
@@ -29,15 +30,18 @@
                           },
                           "count": {
                             "type": "integer",
-                            "title": "count"
+                            "title": "count",
+                            "description": "The number of times this flowop will be executed."
                           },
                           "rate": {
                             "type": "integer",
-                            "title": "rate"
+                            "title": "rate",
+                            "description": "Experimental: This option causes uperf to execute this flowop at the specified rate for iterations or duration seconds."
                           },
                           "remotehost": {
                             "type": "string",
-                            "title": "remotehost"
+                            "title": "remotehost",
+                            "description": "The remote host that we need to connect or accept connection from"
                           },
                           "protocol": {
                             "type": "string",
@@ -48,7 +52,8 @@
                               "sctp",
                               "vsock"
                             ],
-                            "title": "protocol"
+                            "title": "protocol",
+                            "description": "The protocol used to connect to the remote host."
                           },
                           "tcp_nodelay": {
                             "anyOf": [
@@ -78,15 +83,18 @@
                                 "minumum": 0
                               }
                             ],
-                            "title": "tcp_nodelay"
+                            "title": "tcp_nodelay",
+                            "description": "Sets the TCP_NODELAY socket option."
                           },
                           "wndsz": {
                             "type": "integer",
-                            "title": "wndsz"
+                            "title": "wndsz",
+                            "description": "Size of the socket send and receive buffer in kib.\nThis parameter is used to set SO_SNDBUF, SO_RCVBUF flags using setsocktopt()"
                           },
                           "engine": {
                             "type": "string",
-                            "title": "engine"
+                            "title": "engine",
+                            "description": "The SSL Engine used by OpenSSL"
                           }
                         },
                         "additionalProperties": false,
@@ -103,15 +111,18 @@
                           },
                           "count": {
                             "type": "integer",
-                            "title": "count"
+                            "title": "count",
+                            "description": "The number of times this flowop will be executed."
                           },
                           "rate": {
                             "type": "integer",
-                            "title": "rate"
+                            "title": "rate",
+                            "description": "Experimental: This option causes uperf to execute this flowop at the specified rate for iterations or duration seconds."
                           },
                           "remotehost": {
                             "type": "string",
-                            "title": "remotehost"
+                            "title": "remotehost",
+                            "description": "The remote host that we need to connect or accept connection from"
                           },
                           "protocol": {
                             "type": "string",
@@ -122,7 +133,8 @@
                               "sctp",
                               "vsock"
                             ],
-                            "title": "protocol"
+                            "title": "protocol",
+                            "description": "The protocol used to connect to the remote host."
                           },
                           "tcp_nodelay": {
                             "anyOf": [
@@ -152,15 +164,18 @@
                                 "minumum": 0
                               }
                             ],
-                            "title": "tcp_nodelay"
+                            "title": "tcp_nodelay",
+                            "description": "Sets the TCP_NODELAY socket option."
                           },
                           "wndsz": {
                             "type": "integer",
-                            "title": "wndsz"
+                            "title": "wndsz",
+                            "description": "Size of the socket send and receive buffer in kib.\nThis parameter is used to set SO_SNDBUF, SO_RCVBUF flags using setsocktopt()"
                           },
                           "engine": {
                             "type": "string",
-                            "title": "engine"
+                            "title": "engine",
+                            "description": "The SSL Engine used by OpenSSL"
                           }
                         },
                         "additionalProperties": false,
@@ -177,11 +192,18 @@
                           },
                           "count": {
                             "type": "integer",
-                            "title": "count"
+                            "title": "count",
+                            "description": "The number of times this flowop will be executed."
                           },
                           "rate": {
                             "type": "integer",
-                            "title": "rate"
+                            "title": "rate",
+                            "description": "Experimental: This option causes uperf to execute this flowop at the specified rate for iterations or duration seconds."
+                          },
+                          "conn": {
+                            "type": "integer",
+                            "title": "connection id",
+                            "description": "If you know the connection ID, you can specify which one to disconnect."
                           }
                         },
                         "additionalProperties": false,
@@ -198,19 +220,28 @@
                           },
                           "count": {
                             "type": "integer",
-                            "title": "count"
+                            "title": "count",
+                            "description": "The number of times this flowop will be executed."
                           },
                           "rate": {
                             "type": "integer",
-                            "title": "rate"
+                            "title": "rate",
+                            "description": "Experimental: This option causes uperf to execute this flowop at the specified rate for iterations or duration seconds."
                           },
                           "size": {
                             "type": "integer",
-                            "title": "size"
+                            "title": "size",
+                            "description": "Unit: Kib\nAmount of data that is either read or written. Uperf supports exchange of:\n - Fixed size messages\n - Asymmetrical size messages\n - Random size messages\nFor fixed size messages, the client and all servers used a fixed size for receives and transmits. For asymmetrical sized messages, the slaves use the size specified by the rszize parameter. The master still uses the size parameter. For a random sized message, the a uniformly distributed value between the user specifed min and max is used by the transmitting side, and the receiving side uses the max as the message size. Example: size=64 for 64k"
+                          },
+                          "randsize_max": {
+                            "type": "integer",
+                            "title": "Random size max",
+                            "description": "For when a random message size is desired, this sets the max random value, and the size parameter sets the minimum. Unit: kib."
                           },
                           "rsize": {
                             "type": "integer",
-                            "title": "rsize"
+                            "title": "receive-size",
+                            "description": "Receive size in kib.\nFor use with asymmetrical messages. For more contect, see description for \"size\" "
                           },
                           "canfail": {
                             "anyOf": [
@@ -240,7 +271,8 @@
                                 "minumum": 0
                               }
                             ],
-                            "title": "canfail"
+                            "title": "canfail",
+                            "description": "Indicates that a failure for this flowop will not cause uperf to abort. This is espcially useful in UDP where a packet drop does not constitue a fatal error. This can be also be used for example, to test a SYN flood attack (Threads connect() repeatedly ignoring errors)."
                           },
                           "non_blocking": {
                             "anyOf": [
@@ -270,41 +302,18 @@
                                 "minumum": 0
                               }
                             ],
-                            "title": "non_blocking"
+                            "title": "non_blocking",
+                            "description": "Use non-blocking IO. The socket/file descriptor is set the NO_BLOCK flag."
                           },
                           "poll_timeout": {
-                            "anyOf": [
-                              {
-                                "type": "boolean"
-                              },
-                              {
-                                "type": "string",
-                                "enum": [
-                                  "yes",
-                                  "true",
-                                  "on",
-                                  "enable",
-                                  "enabled",
-                                  "1",
-                                  "no",
-                                  "false",
-                                  "off",
-                                  "disable",
-                                  "disabled",
-                                  "0"
-                                ]
-                              },
-                              {
-                                "type": "integer",
-                                "maximum": 1,
-                                "minumum": 0
-                              }
-                            ],
-                            "title": "poll_timeout"
+                            "type": "string",
+                            "title": "poll_timeout",
+                            "description": "If this option is set, the thread will first poll for specified duration before trying to carry out the operation. A poll timeout is returned as an error back to uperf."
                           },
                           "conn": {
                             "type": "integer",
-                            "title": "conn"
+                            "title": "connection id",
+                            "description": "Every open connection is assigned a connection name.\nCurrently, the name can be any valid integer, however, uperf could take a string in the future. conn identifies the connection to use with this flowop. This connection name is thread private."
                           }
                         },
                         "additionalProperties": false,
@@ -321,19 +330,28 @@
                           },
                           "count": {
                             "type": "integer",
-                            "title": "count"
+                            "title": "count",
+                            "description": "The number of times this flowop will be executed."
                           },
                           "rate": {
                             "type": "integer",
-                            "title": "rate"
+                            "title": "rate",
+                            "description": "Experimental: This option causes uperf to execute this flowop at the specified rate for iterations or duration seconds."
                           },
                           "size": {
                             "type": "integer",
-                            "title": "size"
+                            "title": "size",
+                            "description": "Unit: Kib\nAmount of data that is either read or written. Uperf supports exchange of:\n - Fixed size messages\n - Asymmetrical size messages\n - Random size messages\nFor fixed size messages, the client and all servers used a fixed size for receives and transmits. For asymmetrical sized messages, the slaves use the size specified by the rszize parameter. The master still uses the size parameter. For a random sized message, the a uniformly distributed value between the user specifed min and max is used by the transmitting side, and the receiving side uses the max as the message size. Example: size=64 for 64k"
+                          },
+                          "randsize_max": {
+                            "type": "integer",
+                            "title": "Random size max",
+                            "description": "For when a random message size is desired, this sets the max random value, and the size parameter sets the minimum. Unit: kib."
                           },
                           "rsize": {
                             "type": "integer",
-                            "title": "rsize"
+                            "title": "receive-size",
+                            "description": "Receive size in kib.\nFor use with asymmetrical messages. For more contect, see description for \"size\" "
                           },
                           "canfail": {
                             "anyOf": [
@@ -363,7 +381,8 @@
                                 "minumum": 0
                               }
                             ],
-                            "title": "canfail"
+                            "title": "canfail",
+                            "description": "Indicates that a failure for this flowop will not cause uperf to abort. This is espcially useful in UDP where a packet drop does not constitue a fatal error. This can be also be used for example, to test a SYN flood attack (Threads connect() repeatedly ignoring errors)."
                           },
                           "non_blocking": {
                             "anyOf": [
@@ -393,41 +412,18 @@
                                 "minumum": 0
                               }
                             ],
-                            "title": "non_blocking"
+                            "title": "non_blocking",
+                            "description": "Use non-blocking IO. The socket/file descriptor is set the NO_BLOCK flag."
                           },
                           "poll_timeout": {
-                            "anyOf": [
-                              {
-                                "type": "boolean"
-                              },
-                              {
-                                "type": "string",
-                                "enum": [
-                                  "yes",
-                                  "true",
-                                  "on",
-                                  "enable",
-                                  "enabled",
-                                  "1",
-                                  "no",
-                                  "false",
-                                  "off",
-                                  "disable",
-                                  "disabled",
-                                  "0"
-                                ]
-                              },
-                              {
-                                "type": "integer",
-                                "maximum": 1,
-                                "minumum": 0
-                              }
-                            ],
-                            "title": "poll_timeout"
+                            "type": "string",
+                            "title": "poll_timeout",
+                            "description": "If this option is set, the thread will first poll for specified duration before trying to carry out the operation. A poll timeout is returned as an error back to uperf."
                           },
                           "conn": {
                             "type": "integer",
-                            "title": "conn"
+                            "title": "connection id",
+                            "description": "Every open connection is assigned a connection name.\nCurrently, the name can be any valid integer, however, uperf could take a string in the future. conn identifies the connection to use with this flowop. This connection name is thread private."
                           }
                         },
                         "additionalProperties": false,
@@ -444,19 +440,28 @@
                           },
                           "count": {
                             "type": "integer",
-                            "title": "count"
+                            "title": "count",
+                            "description": "The number of times this flowop will be executed."
                           },
                           "rate": {
                             "type": "integer",
-                            "title": "rate"
+                            "title": "rate",
+                            "description": "Experimental: This option causes uperf to execute this flowop at the specified rate for iterations or duration seconds."
                           },
                           "size": {
                             "type": "integer",
-                            "title": "size"
+                            "title": "size",
+                            "description": "Unit: Kib\nAmount of data that is either read or written. Uperf supports exchange of:\n - Fixed size messages\n - Asymmetrical size messages\n - Random size messages\nFor fixed size messages, the client and all servers used a fixed size for receives and transmits. For asymmetrical sized messages, the slaves use the size specified by the rszize parameter. The master still uses the size parameter. For a random sized message, the a uniformly distributed value between the user specifed min and max is used by the transmitting side, and the receiving side uses the max as the message size. Example: size=64 for 64k"
+                          },
+                          "randsize_max": {
+                            "type": "integer",
+                            "title": "Random size max",
+                            "description": "For when a random message size is desired, this sets the max random value, and the size parameter sets the minimum. Unit: kib."
                           },
                           "rsize": {
                             "type": "integer",
-                            "title": "rsize"
+                            "title": "receive-size",
+                            "description": "Receive size in kib.\nFor use with asymmetrical messages. For more contect, see description for \"size\" "
                           },
                           "canfail": {
                             "anyOf": [
@@ -486,7 +491,8 @@
                                 "minumum": 0
                               }
                             ],
-                            "title": "canfail"
+                            "title": "canfail",
+                            "description": "Indicates that a failure for this flowop will not cause uperf to abort. This is espcially useful in UDP where a packet drop does not constitue a fatal error. This can be also be used for example, to test a SYN flood attack (Threads connect() repeatedly ignoring errors)."
                           },
                           "non_blocking": {
                             "anyOf": [
@@ -516,41 +522,18 @@
                                 "minumum": 0
                               }
                             ],
-                            "title": "non_blocking"
+                            "title": "non_blocking",
+                            "description": "Use non-blocking IO. The socket/file descriptor is set the NO_BLOCK flag."
                           },
                           "poll_timeout": {
-                            "anyOf": [
-                              {
-                                "type": "boolean"
-                              },
-                              {
-                                "type": "string",
-                                "enum": [
-                                  "yes",
-                                  "true",
-                                  "on",
-                                  "enable",
-                                  "enabled",
-                                  "1",
-                                  "no",
-                                  "false",
-                                  "off",
-                                  "disable",
-                                  "disabled",
-                                  "0"
-                                ]
-                              },
-                              {
-                                "type": "integer",
-                                "maximum": 1,
-                                "minumum": 0
-                              }
-                            ],
-                            "title": "poll_timeout"
+                            "type": "string",
+                            "title": "poll_timeout",
+                            "description": "If this option is set, the thread will first poll for specified duration before trying to carry out the operation. A poll timeout is returned as an error back to uperf."
                           },
                           "conn": {
                             "type": "integer",
-                            "title": "conn"
+                            "title": "connection id",
+                            "description": "Every open connection is assigned a connection name.\nCurrently, the name can be any valid integer, however, uperf could take a string in the future. conn identifies the connection to use with this flowop. This connection name is thread private."
                           }
                         },
                         "additionalProperties": false,
@@ -567,19 +550,28 @@
                           },
                           "count": {
                             "type": "integer",
-                            "title": "count"
+                            "title": "count",
+                            "description": "The number of times this flowop will be executed."
                           },
                           "rate": {
                             "type": "integer",
-                            "title": "rate"
+                            "title": "rate",
+                            "description": "Experimental: This option causes uperf to execute this flowop at the specified rate for iterations or duration seconds."
                           },
                           "size": {
                             "type": "integer",
-                            "title": "size"
+                            "title": "size",
+                            "description": "Unit: Kib\nAmount of data that is either read or written. Uperf supports exchange of:\n - Fixed size messages\n - Asymmetrical size messages\n - Random size messages\nFor fixed size messages, the client and all servers used a fixed size for receives and transmits. For asymmetrical sized messages, the slaves use the size specified by the rszize parameter. The master still uses the size parameter. For a random sized message, the a uniformly distributed value between the user specifed min and max is used by the transmitting side, and the receiving side uses the max as the message size. Example: size=64 for 64k"
+                          },
+                          "randsize_max": {
+                            "type": "integer",
+                            "title": "Random size max",
+                            "description": "For when a random message size is desired, this sets the max random value, and the size parameter sets the minimum. Unit: kib."
                           },
                           "rsize": {
                             "type": "integer",
-                            "title": "rsize"
+                            "title": "receive-size",
+                            "description": "Receive size in kib.\nFor use with asymmetrical messages. For more contect, see description for \"size\" "
                           },
                           "canfail": {
                             "anyOf": [
@@ -609,7 +601,8 @@
                                 "minumum": 0
                               }
                             ],
-                            "title": "canfail"
+                            "title": "canfail",
+                            "description": "Indicates that a failure for this flowop will not cause uperf to abort. This is espcially useful in UDP where a packet drop does not constitue a fatal error. This can be also be used for example, to test a SYN flood attack (Threads connect() repeatedly ignoring errors)."
                           },
                           "non_blocking": {
                             "anyOf": [
@@ -639,41 +632,18 @@
                                 "minumum": 0
                               }
                             ],
-                            "title": "non_blocking"
+                            "title": "non_blocking",
+                            "description": "Use non-blocking IO. The socket/file descriptor is set the NO_BLOCK flag."
                           },
                           "poll_timeout": {
-                            "anyOf": [
-                              {
-                                "type": "boolean"
-                              },
-                              {
-                                "type": "string",
-                                "enum": [
-                                  "yes",
-                                  "true",
-                                  "on",
-                                  "enable",
-                                  "enabled",
-                                  "1",
-                                  "no",
-                                  "false",
-                                  "off",
-                                  "disable",
-                                  "disabled",
-                                  "0"
-                                ]
-                              },
-                              {
-                                "type": "integer",
-                                "maximum": 1,
-                                "minumum": 0
-                              }
-                            ],
-                            "title": "poll_timeout"
+                            "type": "string",
+                            "title": "poll_timeout",
+                            "description": "If this option is set, the thread will first poll for specified duration before trying to carry out the operation. A poll timeout is returned as an error back to uperf."
                           },
                           "conn": {
                             "type": "integer",
-                            "title": "conn"
+                            "title": "connection id",
+                            "description": "Every open connection is assigned a connection name.\nCurrently, the name can be any valid integer, however, uperf could take a string in the future. conn identifies the connection to use with this flowop. This connection name is thread private."
                           }
                         },
                         "additionalProperties": false,
@@ -690,23 +660,28 @@
                           },
                           "count": {
                             "type": "integer",
-                            "title": "count"
+                            "title": "count",
+                            "description": "The number of times this flowop will be executed."
                           },
                           "rate": {
                             "type": "integer",
-                            "title": "rate"
+                            "title": "rate",
+                            "description": "Experimental: This option causes uperf to execute this flowop at the specified rate for iterations or duration seconds."
                           },
                           "dir": {
                             "type": "string",
-                            "title": "dir"
+                            "title": "dir",
+                            "description": "This parameter identifies the directory from which the files will be transferred. The directory is search recursively to generate a list of all readable files. Example: dir=/space"
                           },
                           "nfiles": {
                             "type": "integer",
-                            "title": "nfiles"
+                            "title": "nfiles",
+                            "description": "This parameter identifies the number of files that will be transferred with each call to sendfilev(3EXT). This is used as the 3rd argument to the sendfilev(3EXT). nfiles is assumed to be 1 for the sendfile flowop function. Example: nfiles=10"
                           },
                           "size": {
                             "type": "integer",
-                            "title": "size"
+                            "title": "size",
+                            "description": "This parameter identifies the chunk size for the transfer. Instead of sending the whole file, uperf will send size sized chunks one at a time. This is used only if nfiles=1. Unit: Kib"
                           }
                         },
                         "additionalProperties": false,
@@ -723,23 +698,28 @@
                           },
                           "count": {
                             "type": "integer",
-                            "title": "count"
+                            "title": "count",
+                            "description": "The number of times this flowop will be executed."
                           },
                           "rate": {
                             "type": "integer",
-                            "title": "rate"
+                            "title": "rate",
+                            "description": "Experimental: This option causes uperf to execute this flowop at the specified rate for iterations or duration seconds."
                           },
                           "dir": {
                             "type": "string",
-                            "title": "dir"
+                            "title": "dir",
+                            "description": "This parameter identifies the directory from which the files will be transferred. The directory is search recursively to generate a list of all readable files. Example: dir=/space"
                           },
                           "nfiles": {
                             "type": "integer",
-                            "title": "nfiles"
+                            "title": "nfiles",
+                            "description": "This parameter identifies the number of files that will be transferred with each call to sendfilev(3EXT). This is used as the 3rd argument to the sendfilev(3EXT). nfiles is assumed to be 1 for the sendfile flowop function. Example: nfiles=10"
                           },
                           "size": {
                             "type": "integer",
-                            "title": "size"
+                            "title": "size",
+                            "description": "This parameter identifies the chunk size for the transfer. Instead of sending the whole file, uperf will send size sized chunks one at a time. This is used only if nfiles=1. Unit: Kib"
                           }
                         },
                         "additionalProperties": false,
@@ -756,11 +736,13 @@
                           },
                           "count": {
                             "type": "integer",
-                            "title": "count"
+                            "title": "count",
+                            "description": "The number of times this flowop will be executed."
                           },
                           "rate": {
                             "type": "integer",
-                            "title": "rate"
+                            "title": "rate",
+                            "description": "Experimental: This option causes uperf to execute this flowop at the specified rate for iterations or duration seconds."
                           }
                         },
                         "additionalProperties": false,
@@ -777,11 +759,26 @@
                           },
                           "count": {
                             "type": "integer",
-                            "title": "count"
+                            "title": "count",
+                            "description": "The number of times this flowop will be executed."
                           },
                           "rate": {
                             "type": "integer",
-                            "title": "rate"
+                            "title": "rate",
+                            "description": "Experimental: This option causes uperf to execute this flowop at the specified rate for iterations or duration seconds."
+                          },
+                          "think_type": {
+                            "type": "string",
+                            "enum": [
+                              "idle",
+                              "busy"
+                            ],
+                            "title": "Think Type",
+                            "description": "The type of think type, either idle, whichsleeps the CPU threads, or busy, which uses CPU time."
+                          },
+                          "duration": {
+                            "type": "string",
+                            "title": "duration"
                           }
                         },
                         "additionalProperties": false,
@@ -790,19 +787,23 @@
                       }
                     ]
                   },
-                  "title": "flowops"
+                  "title": "flowops",
+                  "description": "The flowop name for uperf.\n- connect: Specifies that a connection needs to be opened.\n- accept: Specifies that a connection needs to be accepted from the remote a\n- disconnect: Disconnects from the existing connection.\n- read: Data read on the client side (from the server).\n- write: Data written from the client (to the server).\n- redv: Receiving a message back from the server to the client.\n- sendto: A message sent from the client to the server.\n- sendfile: Uses the sendfile(3EXT) function call to transfer a single file.\n- sendfilev: Transfers a set of files using the sendfilev(3EXT) interface. Multiple files are randomly picked from all transferrable files (see dir below) and tranferred to the server.\n- NOP: Does no operation.\n- think: For period of time with the CPU idling or busy."
                 },
                 "iterations": {
                   "type": "integer",
-                  "title": "iterations"
+                  "title": "iterations",
+                  "description": "The number of times the contents of the transaction will run."
                 },
                 "duration": {
                   "type": "string",
-                  "title": "duration"
+                  "title": "duration",
+                  "description": "How long the items in the transaction run."
                 },
                 "rate": {
                   "type": "integer",
-                  "title": "rate"
+                  "title": "rate",
+                  "description": "For limiting the rate. "
                 }
               },
               "additionalProperties": false,
@@ -810,15 +811,18 @@
                 "flowops"
               ]
             },
-            "title": "transactions"
+            "title": "transactions",
+            "description": "A list of transactions in the group"
           },
           "nthreads": {
             "type": "integer",
-            "title": "nthreads"
+            "title": "nthreads",
+            "description": "The number of threads to run, with each thread running a clone of the group"
           },
           "nprocs": {
             "type": "integer",
-            "title": "nprocs"
+            "title": "nprocs",
+            "description": "The number of processes to run, with each process running a clone of the group"
           }
         },
         "additionalProperties": false,
@@ -826,7 +830,8 @@
           "transactions"
         ]
       },
-      "title": "groups"
+      "title": "groups",
+      "description": "A list of groups in the profile."
     }
   },
   "additionalProperties": false,
