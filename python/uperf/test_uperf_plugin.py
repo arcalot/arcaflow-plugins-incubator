@@ -110,7 +110,7 @@ class ExamplePluginTest(unittest.TestCase):
         # The output data is currently empty.
 
         # --------------------------
-        # Test error when port is in use
+        # Test for error when port is in use
         # Make socket for port be in use.
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind(('127.0.0.1', 20000))
