@@ -13,7 +13,7 @@ In order to contribute a plugin, please fork the repository and add your plugin 
 - Your plugin MUST include a `README.md` file that explains the basic function of how to use the plugin as a standalone script and the functions it uses.
 - You MUST have tests, they MUST run in a network-disconnected environment, and they MUST run from the Dockerfile.
 - Your code MUST use the official Arcaflow plugin SDKs.
-- All schema fields MUST have a name and a description.
+- All schema fields MUST have a [name and a description](https://arcalot.github.io/arcaflow/creating-plugins/python/#metadata).
 
 ### License requirements
 
@@ -26,26 +26,34 @@ In order to contribute a plugin, please fork the repository and add your plugin 
   - GPLv2 or later
   - LGPLv2 or later
   - MIT, MIT-0
+  - CC0
   - Unlicense
-- Your plugin MUST include a `LICENSE` file with the Apache 2.0 license and MAY include a `NOTICE` file. Any copyright notices MUST read "Arcalot contributors".
+- Any copyright notices MUST read "Arcalot contributors".
 - Your plugin code MUST NOT include copyright or license headers in each file.
 
 ### Container requirements
 
 - Your plugin must contain a `Dockerfile` that is based on CentOS Stream 8 (`quay.io/centos/centos:stream8`).
 - Your `Dockerfile` must install all utilities that are required to run your plugin, and your image must work in a network-disconnected environment.
-- The `LICENSE` file must be included in the container image next to your runnable plugin.
+- Your `Dockerfile` must use [multiple build stages](https://docs.docker.com/develop/develop-images/multistage-build/) if interim utilities such as `git` are needed to enable your plugin workload.
+- The [LICENSE file from arcaflow-plugins](https://github.com/arcalot/arcaflow-plugins/blob/main/LICENSE) must be included in the container image next to your runnable plugin.
 - Your `ENTRYPOINT` MUST point to your plugin with the full path in the JSON-array-form (array), while the default `CMD` should be empty. See [the Dockerfile documentation](https://docs.docker.com/engine/reference/builder/#understand-how-cmd-and-entrypoint-interact) for details.
 - Unless your plugin runs in privileged mode (see labels below), your Dockerfile must switch to the user ID and group ID of `1000`.
-- You must add the following labels to your container:
-  - `org.opencontainers.image.source`: a link to the target directory in the main branch of this repository.
-  - `org.opencontainers.image.licenses` should be a valid [SPDX license expression](https://spdx.dev/spdx-specification-21-web-version/#h.jxpfx0ykyb60) describing the licenses of the components in the image. (e.g. `Apache-2.0` AND `GPL-2.0`).
-  - `org.opencontainers.image.vendor` must be `Arcalot project`.
-  - `org.opencontainers.image.authors` must be `Arcalot contributors`.
-  - `org.opencontainers.image.title` must be a human-readable name for the plugin.
-  - `io.github.arcalot.arcaflow.plugin.version` must be `1`.
-  - `io.github.arcalot.arcaflow.plugin.privileged` can be set to `0` if your plugin can only run unprivileged, or `1` if your plugin can only run privileged. Default to both execution modes. The plugin must still be able to start unprivileged and provide a schema even if it normally runs privileged.
-  - `io.github.arcalot.arcaflow.plugin.hostnetwork` can be set to `0` if your plugin can only run on the container network, or `1` if it can only run on the host network. Default to both execution modes.
+
+### Container labels
+
+You must add the following labels to your container:
+
+|Label|Description|
+|-----|-----------|
+|`org.opencontainers.image.source`|a link to the target directory in the main branch of this repository|
+|`org.opencontainers.image.licenses`|a valid [SPDX license expression](https://spdx.dev/spdx-specification-21-web-version/#h.jxpfx0ykyb60) describing the licenses of the components in the image. (e.g. `Apache-2.0` AND `GPL-2.0`)|
+|`org.opencontainers.image.vendor`|must be `Arcalot project`|
+|`org.opencontainers.image.authors`|must be `Arcalot contributors`|
+|`org.opencontainers.image.title`|a human-readable name for the plugin|
+|`io.github.arcalot.arcaflow.plugin.version`|must be `1`|
+|`io.github.arcalot.arcaflow.plugin.privileged`|can be set to `0` if your plugin can only run unprivileged, or `1` if your plugin can only run privileged. Default to both execution modes. The plugin must still be able to start unprivileged and provide a schema even if it normally runs privileged|
+|`io.github.arcalot.arcaflow.plugin.hostnetwork`|can be set to `0` if your plugin can only run on the container network, or `1` if it can only run on the host network. Default to both execution modes|
 
 ### Requirements for Go plugins
 

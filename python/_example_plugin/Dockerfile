@@ -6,7 +6,7 @@ RUN mkdir /plugin
 ADD example_plugin.py /plugin
 ADD test_example_plugin.py /plugin
 ADD requirements.txt /plugin
-ADD LICENSE /plugin
+ADD https://raw.githubusercontent.com/arcalot/arcaflow-plugins/main/LICENSE /plugin
 RUN chmod +x /plugin/example_plugin.py /plugin/test_example_plugin.py
 WORKDIR /plugin
 
