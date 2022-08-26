@@ -5,7 +5,7 @@ This plugin provides the functionality of [stress-ng](https://github.com/ColinIa
 
 ## To run directly with the Arcaflow engine:
 
-In order to run the [arca-smallfile plugin](stressng_plugin.py) follow these steps:
+In order to run the [arca-stressng plugin](stressng_plugin.py) follow these steps:
 
 ### Containerized
 1. Clone this repository
@@ -13,9 +13,8 @@ In order to run the [arca-smallfile plugin](stressng_plugin.py) follow these ste
 `docker build -t arca-stressng <clone-directory>` or
 `podman build -t arca-stressng <clone-directory>`
 3. Run the container with either
-`docker run arca-stressng -f stressng_example.yaml` or
-`podman run arca-stressng -f stressng_example.yaml`
-
+`cat stressng_example.yaml | docker run -i arca-stressng -f - ` or
+`cat stressng_example.yaml | podman run -i arca-stressng -f -`
 
 ### Native
 * Prerequisite: stress-ng needs to be installed on your system *
