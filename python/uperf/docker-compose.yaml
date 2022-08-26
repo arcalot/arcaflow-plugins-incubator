@@ -2,7 +2,7 @@ version: '3.2'
 services:
   plugin:
     image: arcaflow-uperf
-    command: "-s uperf -f /plugin/input/input.yaml"
+    command: "-s uperf -f /plugin/input/netperf.yaml"
     build: .
     networks:
       - cluster_network

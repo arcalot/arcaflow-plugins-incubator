@@ -72,19 +72,36 @@ def process_output(output: bytes) -> typing.Tuple[str, typing.Union[UPerfResults
 
     profile_run = profile_run_search.group(1)
 
+    # The map of transaction to map of timestamp to data.
     timeseries_data = {}
 
     # There are multiple values for the name field. What we care about depends on the workload.
-    tx_name = "Txn2" # TODO: Account for other possible desired values.
-    timeseries_data_search = re.findall(rf"timestamp_ms:([\d\.]+) name:{tx_name} nr_bytes:(\d+) nr_ops:(\d+)", decoded_output)
+    timeseries_data_search = re.findall(rf"timestamp_ms:([\d\.]+) name:Txn(\d+) nr_bytes:(\d+) nr_ops:(\d+)", decoded_output)
+    transaction_last_timestamp = {}
     for datapoint in timeseries_data_search:
         # For now, multiplying by 1000 to get unique times as integers.
-        timeseries_data[int(float(datapoint[0])*1000)] = UPerfRawData(int(datapoint[1]), int(datapoint[2]))
+        time = int(float(datapoint[0])*1000)
+        transaction_index = int(datapoint[1])
+        bytes = int(datapoint[2])
+        ops = int(datapoint[3])
 
-    if (len(timeseries_data_search) == 0):
+        # Discard zero first values.
+        if ops != 0 or (transaction_index in transaction_last_timestamp):
+            # Keep non-first zero values, but set ns_per_op to 0
+            ns_per_op = int(1000*(time - transaction_last_timestamp[transaction_index]) / ops) if ops != 0 else 0
+            # Create inner dict if new transaction result found.
+            if not transaction_index in timeseries_data:
+                timeseries_data[transaction_index] = {}
+            # Save to the correct transaction
+            timeseries_data[transaction_index][time] = UPerfRawData(bytes, ops, ns_per_op)
+        # Save last transaction timestamp for use in calculating time per operation.
+        transaction_last_timestamp[transaction_index] = time
+
+
+    if len(timeseries_data_search) == 0:
         return "error", UPerfError("No results found.\nOutput: " + decoded_output)
 
-    return "success", UPerfResults(profile_name=profile_run, throughput=timeseries_data)
+    return "success", UPerfResults(profile_name=profile_run, timeseries_data=timeseries_data)
 
 
 @plugin.step(
@@ -129,11 +146,12 @@ def run_uperf(params: Profile) -> typing.Tuple[str, typing.Union[UPerfResults, U
 
     with start_client(params) as master_process:
         outs, errs = master_process.communicate()
+
     clean_profile()
 
     if errs != None and len(errs) > 0:
         return "error", UPerfError(outs + "\n" + errs.decode("utf-8"))
-    if outs.find(b"aborted") != -1:
+    if outs.find(b"aborted") != -1 or outs.find(b"WARNING: Errors detected during run") != -1:
         return "error", UPerfError("Errors found in run. Output:\n" + outs.decode("utf-8"))
 
     # Debug output

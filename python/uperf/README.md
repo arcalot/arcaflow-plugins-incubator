@@ -68,7 +68,7 @@ python uperf_plugin.py -s uperf_server --file input/server_input.yaml
 
 And the client:
 ```
-python uperf_plugin.py -s uperf --file input/input.yaml 
+python uperf_plugin.py -s uperf --file input/netperf.yaml
 ```
 
 #### With docker-compose or podman-compose

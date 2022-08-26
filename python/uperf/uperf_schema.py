@@ -108,6 +108,8 @@ class ProfileFlowOpConnection(ProfileFlowOpCommon):
             "description": "The SSL Engine used by OpenSSL"
         }
     )
+    # TODO: cc algorithm as used in https://github.com/uperf/uperf/blob/master/workloads/tcp-change-cc.xml
+    # TODO: stack as used in https://github.com/uperf/uperf/blob/master/workloads/tcp-freebsd-change-stack.xml
 
     def get_options(self):
         options = ProfileFlowOpCommon.get_options(self)
@@ -449,15 +451,28 @@ class UPerfServerResults():
 class UPerfRawData:
     nr_bytes: int
     nr_ops: int
+    ns_per_op: int
 
 @dataclass
 class UPerfResults:
     """
     This is the output data structure for the success case.
     """
-    profile_name: str
+    profile_name: str = field(
+        metadata={
+            "name": "profile_name",
+            "description": "The name of the profile that was run."
+        }
+    )
     # TODO: Switch to timestamp once supported.
-    throughput: typing.Dict[int, UPerfRawData] # Timestamp to data
+    timeseries_data: typing.Dict[int, typing.Dict[int, UPerfRawData]] = field(
+        metadata={
+            "name": "timeseries_data",
+            "description": """Map of the transaction ID to a map of timestamp to UPerfRawData.\n"""
+            """This result varies by input profile, due to it correlating to the transactions """
+            """in the profile. It ignores zero initial results."""
+        }
+    )
 
 # Input and output
 
