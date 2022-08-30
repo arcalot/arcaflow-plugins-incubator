@@ -56,7 +56,14 @@ First, create the yaml files for the client and server inputs. You will pass the
 
 First, create a virtual environment and install the items in the requirements.txt
 ```
+python -m venv test
+source test/bin/activate
 pip install -r requirements.txt
+```
+
+Update the input/netperf.yaml.
+```
+remotehost: 127.0.0.1
 ```
 
 In separate shells on the same or separate machines, you need to run both steps.
