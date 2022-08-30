@@ -58,7 +58,7 @@ def clean_profile():
         os.remove(profile_path)
 
 def start_client(params: Profile):
-    # If you need to pass vars into proviles, use env and copy the current environment.
+    # If you need to pass vars into profiles, use env and copy the current environment.
     # TODO: Generate various types of profiles instead of using a sample profile.
     # Note: uperf calls this 'master'
     return subprocess.Popen(['uperf', '-vaR', '-i', '1', '-m', profile_path ],
