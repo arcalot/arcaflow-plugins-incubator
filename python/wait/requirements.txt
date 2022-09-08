@@ -1,1 +1,1 @@
-git+https://github.com/arcalot/arcaflow-plugin-sdk-python.git@0e878bbe60b2a4e8e22532064e88c750e990ef8b
+arcaflow-plugin-sdk-python > 0.7.0

@@ -31,7 +31,7 @@ class SuccessOutput:
 @dataclass
 class ErrorOutput:
     """
-    This is the output data structure in the error  case.
+    This is the output data structure in the error case.
     """
     error: str
 
@@ -49,7 +49,7 @@ def wait(
     :param params:
 
     :return: the string identifying which output it is,
-             as well the output structure
+             as well as the output structure
     """
     try:
         sleep(params.seconds)

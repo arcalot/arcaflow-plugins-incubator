@@ -1,6 +1,6 @@
 FROM quay.io/centos/centos:stream8
 
-RUN dnf module -y install python39 && dnf install -y python39 python39-pip git
+RUN dnf module -y install python39 && dnf install -y python39 python39-pip
 
 RUN mkdir /plugin
 ADD wait_plugin.py /plugin
