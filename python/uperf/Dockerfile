@@ -1,5 +1,5 @@
 FROM quay.io/centos/centos:stream8 AS builder
-RUN dnf install -y git make gcc lksctp-tools-devel
+RUN dnf install -y git make gcc lksctp-tools-devel automake
 RUN git clone -b 1.0.7 https://github.com/uperf/uperf.git /uperf
 RUN cd /uperf && ./configure && make && make install
 
