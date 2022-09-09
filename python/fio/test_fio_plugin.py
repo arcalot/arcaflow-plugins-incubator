@@ -3,6 +3,7 @@
 import unittest
 import json
 from pathlib import Path
+import sys
 
 import yaml
 from arcaflow_plugin_sdk import plugin
@@ -44,6 +45,13 @@ class FioPluginTest(unittest.TestCase):
         job.cleanup = False
         output_id, output_data = fio_plugin.run(job)
 
+        # if the command didn't succeed, fio-plus.json won't exist.
+        try:
+            self.assertEqual("success", output_id)
+        except AssertionError as e:
+            sys.stderr.write("Error: {}\n".format(output_data.error))
+            raise
+
         with open("fio-plus.json", "r") as fio_output_file:
             fio_results = fio_output_file.read()
             output_actual: fio_plugin.FioSuccessOutput = (
@@ -52,7 +60,6 @@ class FioPluginTest(unittest.TestCase):
                 )
             )
 
-        self.assertEqual("success", output_id)
         self.assertEqual(output_data, output_actual)
 
         Path("fio-plus.json").unlink(missing_ok=True)

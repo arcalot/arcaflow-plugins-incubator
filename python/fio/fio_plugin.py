@@ -43,6 +43,15 @@ def run(
 
         return "success", output
 
+    except FileNotFoundError as exc:
+        if exc.filename == "fio":
+            error_output: FioErrorOutput = FioErrorOutput(
+                "missing fio executable, please install fio package"
+            )
+        else:
+            error_output: FioErrorOutput = FioErrorOutput(format_exc())
+        return "error", error_output
+
     except Exception:
         error_output: FioErrorOutput = FioErrorOutput(format_exc())
         return "error", error_output
