@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "run_duration": {
+      "type": "integer",
+      "title": "run_duration"
+    }
+  },
+  "additionalProperties": false,
+  "required": [],
+  "title": "IPerf Server input",
+  "description": "Runs the passive IPerf server to allow benchmarks between the client and this server",
+  "$id": "iperf_server",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}
