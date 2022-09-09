@@ -1,3 +1,0 @@
-# yaml-language-server:$schema=iperf_server.input.schema.json
-
-run_duration: 15
