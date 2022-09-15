@@ -84,4 +84,4 @@ First, build the containers with `docker-compose build` or `podman-compose build
 
 Next, start the containers with `docker-compose up` or `podman-compose up`
 
-Lastly, when it's complete, clean up with `docker-compose down` or `podman-compose down`
+Lastly, when it's complete, clean up with `docker-compose down --volume` or `podman-compose down --volume`

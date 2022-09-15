@@ -1,11 +1,8 @@
-FROM quay.io/centos/centos:stream8 AS builder
-RUN dnf install -y git make gcc lksctp-tools-devel automake
-RUN git clone -b 1.0.7 https://github.com/uperf/uperf.git /uperf
-RUN cd /uperf && ./configure && make && make install
+FROM quay.io/cloud-bulldozer/uperf AS tester
 
 FROM quay.io/centos/centos:stream8
 RUN dnf module -y install python39 && dnf install -y python39 python39-pip lksctp-tools-devel
-COPY --from=builder /usr/local/bin/uperf /usr/local/bin/uperf
+COPY --from=tester /usr/bin/uperf /uperf/uperf
 RUN mkdir /plugin
 ADD uperf_plugin.py /plugin
 ADD uperf_schema.py /plugin
@@ -15,6 +12,7 @@ WORKDIR /plugin
 
 RUN pip3 install -r requirements.txt
 RUN python3.9 test_uperf_plugin.py
+RUN rm -f /uperf/uperf
 
 EXPOSE 20000
 

@@ -61,7 +61,7 @@ def start_client(params: Profile):
     # If you need to pass vars into profiles, use env and copy the current environment.
     # TODO: Generate various types of profiles instead of using a sample profile.
     # Note: uperf calls this 'master'
-    return subprocess.Popen(['uperf', '-vaR', '-i', '1', '-m', profile_path ],
+    return subprocess.Popen(['/uperf/uperf', '-vaR', '-i', '1', '-m', profile_path ],
         stdout=subprocess.PIPE, cwd=os.getcwd())
 
 def process_output(output: bytes) -> typing.Tuple[str, typing.Union[UPerfResults, UPerfError]]:
@@ -115,7 +115,7 @@ def run_uperf_server(params: UPerfServerParams) -> typing.Tuple[str,
     # Start the passive server
     # Note: Uperf calls it 'slave'
     try:
-        result = subprocess.run(['uperf', '-s'], stdout=subprocess.PIPE,
+        result = subprocess.run(['/uperf/uperf', '-s'], stdout=subprocess.PIPE,
             stderr=subprocess.PIPE, timeout=params.run_duration)
         # It should not end itself, so getting here means there was an error.
         return "error", UPerfServerError(result.returncode, result.stdout.decode("utf-8") +

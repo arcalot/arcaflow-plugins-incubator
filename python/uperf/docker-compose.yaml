@@ -1,5 +1,10 @@
 version: '3.2'
 services:
+  uperf:
+    image: quay.io/cloud-bulldozer/uperf
+    command: cp /usr/bin/uperf /uperf
+    volumes:
+      - uperf:/uperf
   plugin:
     image: arcaflow-uperf
     command: "-s uperf -f /plugin/input/netperf.yaml"
@@ -12,6 +17,7 @@ services:
       - "server"
     volumes:
       - ./input:/plugin/input:z
+      - uperf:/uperf
   server:
     image: arcaflow-uperf
     command: "-s uperf_server -f /plugin/input/server_input.yaml"
@@ -22,5 +28,8 @@ services:
       - cluster_network
     volumes:
       - ./input:/plugin/input:z
+      - uperf:/uperf
 networks:
   cluster_network:
+volumes:
+  uperf:
