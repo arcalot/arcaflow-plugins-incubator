@@ -76,14 +76,14 @@ class ProfileFlowOpConnection(ProfileFlowOpCommon):
         default="127.0.0.1",
         metadata={
             "name": "remotehost",
-            "description": "The remote host that we need to connect or accept connection from"
+            "description": "The remote host server that we need to connect or accept connection from"
         }
     )
     port: int = field(
         default=20000,
         metadata={
             "name": "port",
-            "description": "The port of the remote server"
+            "description": "The port of the remote host server"
         }
     )
     protocol: IProtocol = field(
