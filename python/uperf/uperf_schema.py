@@ -76,7 +76,14 @@ class ProfileFlowOpConnection(ProfileFlowOpCommon):
         default="127.0.0.1",
         metadata={
             "name": "remotehost",
-            "description": "The remote host that we need to connect or accept connection from"
+            "description": "The remote host server that we need to connect or accept connection from"
+        }
+    )
+    port: int = field(
+        default=20000,
+        metadata={
+            "name": "port",
+            "description": "The port of the remote host server"
         }
     )
     protocol: IProtocol = field(
@@ -114,6 +121,7 @@ class ProfileFlowOpConnection(ProfileFlowOpCommon):
     def get_options(self):
         options = ProfileFlowOpCommon.get_options(self)
         options.append(f"remotehost={self.remotehost}")
+        options.append(f"port={self.port}")
         options.append(f"protocol={self.protocol.value}")
         if self.tcp_nodelay:
             options.append("tcp_nodelay")
