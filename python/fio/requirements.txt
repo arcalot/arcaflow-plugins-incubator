@@ -1,1 +1,0 @@
-arcaflow-plugin-sdk; python_version >= "3.9"

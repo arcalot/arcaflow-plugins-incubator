@@ -1,8 +1,0 @@
-operation: 'memory'
-threads: 5
-events: 0
-time: 15
-memoryblocksize: '2KiB'
-memorytotalsize: '100GiB'
-memoryscope: 'local'
-memoryoperation: 'write'
