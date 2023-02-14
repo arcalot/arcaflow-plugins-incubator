@@ -1,4 +1,0 @@
-arcaflow-plugin-sdk
-#smallfile dependencies
-numpy
-scipy

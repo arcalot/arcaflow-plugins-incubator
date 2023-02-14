@@ -1,5 +1,0 @@
-operation: 'cpu'
-threads: 2
-events: 0
-cpumaxprime: 12000
-time: 15
